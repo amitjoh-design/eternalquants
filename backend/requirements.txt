@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase==2.0.0
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+modal
+# pandas
+# numpy
+python-dotenv
+httpx
