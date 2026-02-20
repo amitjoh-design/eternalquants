@@ -441,7 +441,7 @@ const CSS = `
 .eq-viewer-body { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px; }
 
 /* Notebook cell */
-.eq-nb-cell { border:1px solid var(--eq-border); border-radius:3px; overflow:hidden; }
+.eq-nb-cell { border:1px solid var(--eq-border); border-radius:3px; overflow:hidden; flex-shrink:0; }
 .eq-nb-cell-type {
   padding:4px 12px; font-family:var(--eq-mono); font-size:8px; letter-spacing:2px;
   text-transform:uppercase; border-bottom:1px solid var(--eq-border);
