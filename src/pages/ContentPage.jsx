@@ -450,8 +450,9 @@ const CSS = `
 .eq-nb-cell-type.markdown { background:rgba(0,229,255,.04); color:rgba(0,229,255,.6); }
 .eq-nb-source {
   padding:12px 14px; font-family:var(--eq-mono); font-size:11px;
-  color:rgba(232,244,237,.8); white-space:pre-wrap; word-break:break-word; line-height:1.6;
-  background:rgba(0,0,0,.2);
+  color:#e8f4ed; white-space:pre-wrap; word-break:break-all; line-height:1.6;
+  background:rgba(0,0,0,.2); overflow-x:auto; max-height:400px; overflow-y:auto;
+  display:block; min-height:1.6em; margin:0;
 }
 .eq-nb-output {
   padding:8px 14px; font-family:var(--eq-mono); font-size:10px;
@@ -771,7 +772,8 @@ function FileViewer({ file, onClose }) {
           {loading && <div className="eq-loading"><div className="eq-spinner" /><span>LOADING FILE...</span></div>}
           {error && <div style={{ fontFamily: 'var(--eq-mono)', fontSize: 11, color: 'var(--eq-red)', padding: 16 }}>⚠ {error}</div>}
           {content?.type === 'notebook' && content.cells.map((cell, i) => {
-            const src = Array.isArray(cell.source) ? cell.source.join('') : cell.source;
+            const rawSrc = Array.isArray(cell.source) ? cell.source.join('') : cell.source;
+            const src = rawSrc == null ? '' : String(rawSrc);
             const outputs = cell.outputs?.map(o => {
               if (o.text) return Array.isArray(o.text) ? o.text.join('') : o.text;
               if (o.data?.['text/plain']) return Array.isArray(o.data['text/plain']) ? o.data['text/plain'].join('') : o.data['text/plain'];
@@ -780,9 +782,9 @@ function FileViewer({ file, onClose }) {
             return (
               <div key={i} className="eq-nb-cell">
                 <div className={`eq-nb-cell-type ${cell.cell_type === 'code' ? 'code' : 'markdown'}`}>
-                  {cell.cell_type === 'code' ? `In [${i + 1}]` : 'MARKDOWN'}
+                  {cell.cell_type === 'code' ? `In [${cell.execution_count ?? i + 1}]` : 'MARKDOWN'}
                 </div>
-                <div className="eq-nb-source">{src}</div>
+                <pre className="eq-nb-source">{src || ' '}</pre>
                 {outputs && <div className="eq-nb-output">{outputs}</div>}
               </div>
             );
