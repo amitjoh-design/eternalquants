@@ -410,7 +410,7 @@ export default function LandingPage() {
               <div className="badge-sweep" style={S.badge}>FUTURES</div>
               <div className="badge-sweep" style={S.badge}>OPTIONS</div>
             </div>
-            <button style={S.cta} onClick={() => navigate('/learn')}>
+            <button style={S.cta} onClick={() => navigate('/auth')}>
               Start Learning →
             </button>
           </div>
