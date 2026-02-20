@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>EternalQuants</title>
+    <script>
+      // GitHub Pages SPA redirect fix
+      // When GitHub Pages gets a 404 (e.g. /auth, /learn), it serves this 404.html
+      // We redirect back to index.html with the path encoded, then index.html decodes it
+      // This preserves the URL hash (needed for OAuth tokens like #access_token=...)
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        '/?p=' + encodeURIComponent(l.pathname + l.search) +
+        (l.hash ? '&h=' + encodeURIComponent(l.hash) : '')
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
