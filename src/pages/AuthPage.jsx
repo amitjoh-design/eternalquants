@@ -107,6 +107,20 @@ export default function AuthPage() {
 
   useEffect(() => {
     injectFonts();
+
+    // Handle OAuth redirect — Supabase puts tokens in the URL hash
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      // Let Supabase parse the hash and establish the session
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          window.history.replaceState(null, '', window.location.pathname);
+          navigate('/learn', { replace: true });
+        }
+      });
+      return;
+    }
+
     // If already logged in, skip auth page
     if (user) navigate('/learn', { replace: true });
   }, [user, navigate]);
