@@ -718,7 +718,9 @@ function FileViewer({ file, onClose }) {
       return;
     }
     // Otherwise fetch from Supabase storage
-    supabase.storage.from('community-files').download(file.storagePath)
+    const bucketName = file.bucket || 'community-files';
+    const storagePath = file.storage_path || file.storagePath;
+    supabase.storage.from(bucketName).download(storagePath)
       .then(({ data, error: err }) => {
         if (err) throw err;
         const reader = new FileReader();
