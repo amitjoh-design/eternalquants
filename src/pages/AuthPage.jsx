@@ -172,7 +172,7 @@ export default function AuthPage() {
     try {
       const { error: err } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: `${window.location.origin}/learn` },
+        options: { redirectTo: `${window.location.origin}/auth` },
       });
       if (err) throw err;
     } catch (err) {
