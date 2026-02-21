@@ -550,14 +550,156 @@ const CSS = `
 .eq-rl .eq-cat-icon { background:rgba(255,77,109,.1); color:var(--eq-red); }
 .eq-rl .eq-cat-name { color:var(--eq-red); }
 .eq-rl .eq-cat-badge { background:rgba(255,77,109,.1); color:var(--eq-red); border:1px solid rgba(255,77,109,.2); }
+
+/* GUIDE SECTIONS */
+.eq-guide-wrap { display:flex; flex-direction:column; gap:16px; padding:20px 22px; flex:1; overflow-y:auto; }
+.eq-guide-sec { background:rgba(0,0,0,.22); border:1px solid var(--eq-border); border-radius:4px; overflow:hidden; }
+.eq-guide-sec-hdr {
+  padding:12px 18px; display:flex; align-items:center; gap:12px; cursor:pointer;
+  background:linear-gradient(135deg,rgba(0,255,140,.04),transparent);
+  border-bottom:1px solid var(--eq-border); user-select:none;
+}
+.eq-guide-sec-hdr:hover { background:rgba(0,255,140,.05); }
+.eq-guide-sec-num { font-family:var(--eq-mono); font-size:9px; letter-spacing:3px; color:var(--eq-green); opacity:.7; flex-shrink:0; }
+.eq-guide-sec-title { font-family:var(--eq-display); font-size:13px; font-weight:700; color:var(--eq-white); flex:1; letter-spacing:.5px; }
+.eq-guide-sec-chev { font-size:10px; color:var(--eq-muted); transition:.2s; flex-shrink:0; }
+.eq-guide-sec-chev.open { transform:rotate(90deg); }
+.eq-guide-sec-body { padding:18px; display:flex; flex-direction:column; gap:12px; }
+.eq-guide-p { font-size:13px; line-height:1.8; color:rgba(232,244,237,.78); font-weight:400; }
+.eq-guide-callout {
+  padding:12px 16px; border-radius:3px; border-left:3px solid;
+  font-size:12px; line-height:1.7; font-family:var(--eq-body);
+}
+.eq-guide-callout.c-green { border-color:var(--eq-green); background:rgba(0,255,140,.05); color:rgba(0,255,140,.9); }
+.eq-guide-callout.c-cyan { border-color:var(--eq-cyan); background:rgba(0,229,255,.05); color:rgba(0,229,255,.9); }
+.eq-guide-callout.c-gold { border-color:var(--eq-gold); background:rgba(255,209,102,.05); color:rgba(255,209,102,.9); }
+.eq-guide-callout.c-red { border-color:var(--eq-red); background:rgba(255,77,109,.05); color:rgba(255,77,109,.9); }
+.eq-guide-formula {
+  font-family:var(--eq-mono); font-size:12px; line-height:1.9;
+  background:rgba(0,0,0,.35); border:1px solid rgba(0,255,140,.1);
+  border-radius:3px; padding:14px 18px; color:var(--eq-green); letter-spacing:.5px; white-space:pre-wrap;
+}
+.eq-guide-table { width:100%; border-collapse:collapse; font-family:var(--eq-mono); font-size:11px; }
+.eq-guide-table th { background:rgba(0,255,140,.07); color:var(--eq-green); padding:8px 12px; text-align:left; border-bottom:1px solid var(--eq-border); letter-spacing:1px; font-size:9px; text-transform:uppercase; }
+.eq-guide-table td { padding:7px 12px; color:rgba(232,244,237,.7); border-bottom:1px solid rgba(0,255,140,.04); vertical-align:top; line-height:1.5; }
+.eq-guide-table tr:last-child td { border-bottom:none; }
+.eq-guide-table td:first-child { color:var(--eq-cyan); }
+.eq-guide-steps { display:flex; flex-direction:column; gap:10px; }
+.eq-guide-step { display:flex; gap:12px; align-items:flex-start; }
+.eq-guide-step-num { width:22px; height:22px; border-radius:50%; background:rgba(0,255,140,.12); border:1px solid rgba(0,255,140,.25); display:flex; align-items:center; justify-content:center; font-family:var(--eq-mono); font-size:9px; color:var(--eq-green); flex-shrink:0; margin-top:1px; }
+.eq-guide-step-body { flex:1; }
+.eq-guide-step-title { font-family:var(--eq-mono); font-size:11px; color:var(--eq-white); margin-bottom:2px; letter-spacing:.5px; }
+.eq-guide-step-desc { font-size:12px; color:rgba(232,244,237,.6); line-height:1.6; font-family:var(--eq-body); }
+.eq-guide-result { display:flex; flex-wrap:wrap; gap:10px; padding:14px; background:rgba(0,255,140,.03); border:1px solid rgba(0,255,140,.15); border-radius:3px; }
+.eq-guide-result-item { display:flex; flex-direction:column; align-items:center; flex:1; min-width:100px; }
+.eq-guide-result-val { font-family:var(--eq-display); font-size:18px; font-weight:700; color:var(--eq-green); line-height:1; text-align:center; }
+.eq-guide-result-lbl { font-family:var(--eq-mono); font-size:8px; letter-spacing:2px; color:var(--eq-muted); margin-top:4px; text-transform:uppercase; text-align:center; }
 `;
+
+/* ─── ARIMA GUIDE DATA ─── */
+const ARIMA_GUIDE = [
+  {
+    num: '01', title: 'What is ARIMA?',
+    blocks: [
+      { type: 'p', text: 'ARIMA stands for AutoRegressive Integrated Moving Average. It is the foundational statistical model for time series forecasting. Three components work together: AR captures how past values predict the future; I handles non-stationarity by differencing the series; MA models the dependency on past forecast errors.' },
+      { type: 'formula', text: 'ARIMA(p, d, q)\n\nAR(p):  Yt = c + φ₁Yt₋₁ + φ₂Yt₋₂ + ... + φₚYt₋ₚ + εt\nMA(q):  Yt = c + εt + θ₁εt₋₁ + θ₂εt₋₂ + ... + θqεt₋q\n\nCombined after d differences:\nΔᵈYt = c + φ₁ΔᵈYt₋₁ + ... + φₚΔᵈYt₋ₚ + εt + θ₁εt₋₁ + ... + θqεt₋q' },
+      { type: 'table', head: ['Component', 'Parameter', 'Role'], rows: [
+        ['AutoRegressive', 'p', 'Number of lagged value terms — captures momentum / mean reversion'],
+        ['Integrated', 'd', 'Number of differences to achieve stationarity (0 for returns, 1 for prices)'],
+        ['Moving Average', 'q', 'Number of lagged forecast error terms — corrects for recent shocks'],
+        ['Seasonal', 'P, D, Q, s', 'Seasonal counterparts for SARIMA — s=5 weekly, s=252 annual'],
+      ]},
+      { type: 'callout', variant: 'c-cyan', text: 'SARIMA(p,d,q)(P,D,Q)s extends ARIMA with seasonal AR, differencing, and MA terms. For weekly patterns use s=5, monthly s=21, annual s=252 trading days. Extremely powerful for cyclic financial instruments like NIFTY index or commodity futures.' },
+    ]
+  },
+  {
+    num: '02', title: 'The Unit Root Problem',
+    blocks: [
+      { type: 'p', text: 'Financial price series are almost always non-stationary — they have a "unit root", meaning the mean and variance drift over time without bound. ARIMA requires stationarity. Applying it directly to raw prices is one of the most common and damaging mistakes in quantitative finance.' },
+      { type: 'callout', variant: 'c-red', text: '⚠ Warning: Fitting ARIMA on raw prices gives misleadingly high R² (often 0.99+) and near-perfect in-sample fit. This is spurious regression. The model is simply predicting "tomorrow ≈ today" — a naive random walk in disguise, not genuine predictive power.' },
+      { type: 'table', head: ['Test', 'Null Hypothesis', 'Decision Rule', 'NIFTY 50 Result'], rows: [
+        ['ADF (Augmented Dickey-Fuller)', 'Series has unit root (non-stationary)', 'Reject H₀ if p < 0.05 → stationary', 'Raw Close: p=0.92 ✗ | Log-diff returns: p<0.001 ✓'],
+        ['KPSS (Kwiatkowski-Phillips-Schmidt-Shin)', 'Series is stationary', 'Fail to reject H₀ if p > 0.05 → stationary', 'Raw Close: p=0.01 ✗ | Log-diff returns: p=0.10 ✓'],
+      ]},
+      { type: 'callout', variant: 'c-gold', text: '💡 Always run BOTH ADF and KPSS. ADF tests for presence of unit root; KPSS tests for stationarity. When ADF fails to reject AND KPSS rejects — you have strong bilateral evidence of non-stationarity. Agreement from both tests after transformation is the gold standard before fitting ARIMA.' },
+    ]
+  },
+  {
+    num: '03', title: 'Pre-Processing Pipeline',
+    blocks: [
+      { type: 'p', text: 'Three approaches exist for making a price series suitable for ARIMA. The notebook tested all three on NIFTY 50 data using ADF and KPSS diagnostics — only the third is statistically sound and practically useful for trading.' },
+      { type: 'table', head: ['Approach', 'Transformation', 'Stationarity', 'Verdict'], rows: [
+        ['Raw price levels', 'None — use Close as-is', '✗ Unit root present', '✗ Never use — spurious regression, R²≈0.99 meaningless'],
+        ['First difference', 'ΔPt = Pt − Pt₋₁', '✓ Usually stationary', '○ Acceptable — scale-dependent, not unit-free'],
+        ['Log + first difference', 'rt = ln(Pt/Pt₋₁)', '✓ Stationary + symmetric', '✓ Best practice — models log-returns directly'],
+      ]},
+      { type: 'callout', variant: 'c-green', text: '✓ Best Practice: Work with log-returns: rt = ln(Pt) − ln(Pt₋₁). This removes scale effects, symmetrises return distributions, converts multiplicative price dynamics into additive return dynamics, and produces values comparable across instruments and time periods.' },
+      { type: 'steps', items: [
+        { title: 'Step 1 — Load Adjusted Price Data', desc: 'Fetch OHLCV data via yfinance, NSEpy, or Zerodha API. Always use adjusted Close prices to account for corporate actions (splits, bonuses, dividends).' },
+        { title: 'Step 2 — Compute Log Returns', desc: 'rt = np.log(df["Close"]).diff().dropna() — this is your ARIMA target variable. Never fit ARIMA directly on prices or simple percentage returns.' },
+        { title: 'Step 3 — Run Stationarity Tests', desc: 'Apply both ADF and KPSS. Both must confirm stationarity (ADF p<0.05 and KPSS p>0.05). If not, apply one more round of differencing (d=2, rare for log-returns).' },
+        { title: 'Step 4 — Inspect ACF / PACF Plots', desc: 'Partial ACF (PACF) cuts off sharply at lag p → AR order. ACF cuts off at lag q → MA order. Gradual decay in both suggests ARMA. Use these to guide auto_arima search bounds.' },
+        { title: 'Step 5 — Train / Hold-out Split', desc: 'Reserve last 20–30 trading days as unseen hold-out. Never use random splits — temporal ordering is sacred. Walk-forward validation is mandatory for production models.' },
+      ]},
+    ]
+  },
+  {
+    num: '04', title: 'Model Training & Order Selection',
+    blocks: [
+      { type: 'p', text: 'ARIMA(p,d,q) order selection is the most critical step. Auto-ARIMA searches the parameter space using information criteria — AIC for best predictive accuracy, BIC for most parsimonious model. When working with pre-differenced log-returns, always set d=0 (differencing was done externally).' },
+      { type: 'formula', text: 'Information Criteria for Model Selection:\n\nAIC = 2k − 2·ln(L̂)\nBIC = k·ln(n) − 2·ln(L̂)\n\nk = number of parameters | L̂ = maximized likelihood | n = sample size\n\nLower AIC/BIC = better model fit. Negative values are common with log-return series.' },
+      { type: 'table', head: ['Result', 'Value', 'Interpretation'], rows: [
+        ['Best Model', 'ARIMA(3,0,0)', 'Auto-selected by pmdarima on NIFTY 50 log-returns (2020–2025)'],
+        ['AIC Score', '−7554.217', 'Excellent fit; negative AIC common with log-return series (small scale)'],
+        ['p = 3', '3 AR lags', 'Last 3 trading days of returns predict today — captures short-term momentum'],
+        ['d = 0', 'No extra differencing', 'Log-returns are already stationary; d=1 was applied as the log-diff transformation'],
+        ['q = 0', 'No MA terms', 'Residuals show no significant MA structure at this order specification'],
+      ]},
+      { type: 'callout', variant: 'c-cyan', text: 'Python: from pmdarima import auto_arima | model = auto_arima(log_returns, start_p=0, max_p=5, start_q=0, max_q=5, d=0, information_criterion="aic", stepwise=True, seasonal=False) | For seasonal: set seasonal=True, m=5 (weekly) or m=21 (monthly).' },
+    ]
+  },
+  {
+    num: '05', title: 'Post-Training Diagnostics',
+    blocks: [
+      { type: 'p', text: 'A well-specified ARIMA model should produce residuals that are white noise — uncorrelated, zero mean, and ideally normally distributed. Four diagnostic tests must be run before trusting a model for trading signals.' },
+      { type: 'table', head: ['Test', 'What it Checks', 'Pass Condition', 'NIFTY 50 Result'], rows: [
+        ['Ljung-Box Q-test', 'Residual autocorrelation at lags 1–20', 'p > 0.05 — no autocorrelation remaining', '⚠ p=0.000 — autocorrelation remains → GARCH extension needed'],
+        ['Jarque-Bera test', 'Normality of residuals (skewness + kurtosis)', 'p > 0.05 — residuals are normal', '⚠ p<0.001 — fat tails present (universal for equity returns)'],
+        ['ARCH-LM test', 'Volatility clustering in squared residuals', 'p > 0.05 — no ARCH effects', 'ARCH effects confirmed → GARCH(1,1) required to model variance'],
+        ['ACF of residuals', 'Visual check — lags within 95% CI bands', 'All autocorrelations within ±1.96/√n bands', 'Mostly within bounds; a few extreme lags breach boundary'],
+      ]},
+      { type: 'callout', variant: 'c-gold', text: '💡 The Ljung-Box failure on NIFTY 50 is not a model failure — it is a diagnostic insight. It reveals that residual variance is time-varying (volatility clustering). This is the exact trigger to extend to ARIMA-GARCH: ARIMA models the conditional mean; GARCH models the conditional variance.' },
+      { type: 'callout', variant: 'c-red', text: '⚠ Fat tails are universal in equity return distributions. Never assume normality for NSE index data. Use Student-t or skewed-t distribution in downstream risk models. Directional accuracy and MAPE are more reliable trading metrics than RMSE for fat-tailed return series.' },
+    ]
+  },
+  {
+    num: '06', title: 'Forecasting & Trading Insights',
+    blocks: [
+      { type: 'p', text: 'ARIMA forecasts are made in log-return space and must be reconstructed back to price levels for execution. One-step-ahead forecasting is significantly more reliable than multi-step — accuracy degrades with horizon. For trading, directional accuracy (up vs down) often matters more than absolute error magnitude.' },
+      { type: 'formula', text: 'Price Reconstruction from Log-Return Forecast:\n\nStep 1:  r̂t = ARIMA one-step-ahead forecast (log-return)\nStep 2:  P̂t = Pt₋₁ × e^(r̂t)\n\nMulti-step compounding:\nP̂t+k = Pt × exp( r̂t+1 + r̂t+2 + ... + r̂t+k )' },
+      { type: 'result', items: [
+        { val: 'ARIMA(3,0,0)', lbl: 'Best model (Auto-AIC)' },
+        { val: '100%', lbl: 'Directional accuracy' },
+        { val: '1.18%', lbl: 'MAPE — 30-day hold-out' },
+        { val: '−7554', lbl: 'AIC score' },
+      ]},
+      { type: 'callout', variant: 'c-green', text: '✓ NIFTY 50 live result (Jan–Feb 2026 hold-out, 30 trading days): ARIMA(3,0,0) on log-returns achieved 100% directional accuracy with MAPE of 1.18%. This sets the baseline — any more complex model must beat this before claiming additional value.' },
+      { type: 'table', head: ['Next Step', 'When to Add It', 'What It Adds'], rows: [
+        ['ARIMA-GARCH', 'Ljung-Box fails / ARCH-LM confirms volatility clustering', 'Time-varying variance → calibrated risk estimates and position sizing'],
+        ['SARIMA', 'ACF shows clear seasonal spike at lag s', 'Seasonal return patterns for cyclical instruments'],
+        ['ARIMA + LSTM', 'ARIMA residuals show non-linear structure in ACF', 'Non-linear residual capture — consistently raises accuracy by 10–20%'],
+        ['VAR', 'Multiple correlated instruments (NIFTY + Bank Nifty + USD/INR)', 'Cross-asset spillover modeling and Granger causality testing'],
+      ]},
+    ]
+  },
+];
 
 /* ─── MODEL DATA (unchanged from HTML) ─── */
 const CATEGORIES = [
   {
     id:'classical', label:'Classical Statistical', icon:'📐', short:'STAT',
     models:[
-      { id:'arima', name:'ARIMA / SARIMA', tag:'CLASSIC', fullName:'AutoRegressive Integrated Moving Average', overview:'ARIMA is the bedrock of time series forecasting. It combines autoregression (AR), differencing for stationarity (I), and moving average (MA) components. SARIMA extends it with seasonal terms, making it extremely powerful for cyclic financial data like indices, commodity prices, and currency pairs. For NIFTY 50 and similar series, SARIMA remains the best baseline you can build against.', complexity:{implementation:3,computation:2,tuning:3,interpretability:5}, useFor:['Trend Forecasting','Mean Reversion','Seasonality Capture','Price Level Prediction','Volatility Baseline'], pros:['Highly interpretable coefficients','Strong statistical foundation — AIC/BIC/Ljung-Box','Works well on stationary financial returns','SARIMA handles quarterly/monthly seasonality','Well-understood confidence intervals'], cons:['Assumes linear structure — misses non-linearity','Requires manual order selection (p,d,q)','Struggles with structural breaks','Single-step forecast degrades quickly'], params:[['p (AR order)','Lag terms — typically 1–3 for daily data'],['d (Difference)','1 for prices, 0 for returns'],['q (MA order)','Error lag terms'],['P,D,Q,s','Seasonal counterparts; s=5 for weekly, 252 for annual'],['AIC/BIC','Use for automatic order selection']], metrics:{accuracy:'★★★☆☆',speed:'★★★★★',interpretability:'★★★★★',complexity:'LOW'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['UNIVARIATE','STATIONARY','LINEAR'] },
+      { id:'arima', name:'ARIMA / SARIMA', tag:'CLASSIC', fullName:'AutoRegressive Integrated Moving Average', overview:'ARIMA is the bedrock of time series forecasting. It combines autoregression (AR), differencing for stationarity (I), and moving average (MA) components. SARIMA extends it with seasonal terms, making it extremely powerful for cyclic financial data like indices, commodity prices, and currency pairs. For NIFTY 50 and similar series, SARIMA remains the best baseline you can build against.', complexity:{implementation:3,computation:2,tuning:3,interpretability:5}, useFor:['Trend Forecasting','Mean Reversion','Seasonality Capture','Price Level Prediction','Volatility Baseline'], pros:['Highly interpretable coefficients','Strong statistical foundation — AIC/BIC/Ljung-Box','Works well on stationary financial returns','SARIMA handles quarterly/monthly seasonality','Well-understood confidence intervals'], cons:['Assumes linear structure — misses non-linearity','Requires manual order selection (p,d,q)','Struggles with structural breaks','Single-step forecast degrades quickly'], params:[['p (AR order)','Lag terms — typically 1–3 for daily data'],['d (Difference)','1 for prices, 0 for returns'],['q (MA order)','Error lag terms'],['P,D,Q,s','Seasonal counterparts; s=5 for weekly, 252 for annual'],['AIC/BIC','Use for automatic order selection']], metrics:{accuracy:'★★★☆☆',speed:'★★★★★',interpretability:'★★★★★',complexity:'LOW'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['UNIVARIATE','STATIONARY','LINEAR'], guide: ARIMA_GUIDE },
       { id:'garch', name:'GARCH', tag:'VOL', fullName:'Generalized AutoRegressive Conditional Heteroskedasticity', overview:"GARCH models the time-varying variance (volatility) of financial returns. Markets don't have constant volatility — calm periods are followed by turbulent ones (volatility clustering). GARCH(1,1) is the workhorse: it captures this clustering, making it essential for options pricing, VaR calculation, and risk management in Indian markets. EGARCH and GJR-GARCH add asymmetry for the leverage effect.", complexity:{implementation:3,computation:3,tuning:3,interpretability:4}, useFor:['Volatility Forecasting','Options Pricing','VaR / Risk Management','Portfolio Optimization','Regime Detection'], pros:['Captures volatility clustering perfectly','EGARCH handles leverage effect','Fast estimation via MLE','Widely used in regulatory frameworks','Excellent for options Greeks'], cons:['Models variance only, not price direction','Requires ARCH-LM test for applicability','Tail risk can be underestimated','Parameter instability in regime shifts'], params:[['ω (omega)','Long-run variance term'],['α (alpha)','Weight on past squared residuals'],['β (beta)','Weight on past variance'],['p, q','ARCH and GARCH lags'],['Distribution','Normal, t, GED for fat tails']], metrics:{accuracy:'★★★★☆',speed:'★★★★★',interpretability:'★★★★☆',complexity:'LOW-MED'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['VOLATILITY','UNIVARIATE','MLE'] },
       { id:'var', name:'VAR', tag:'MULTI', fullName:'Vector AutoRegression', overview:'VAR extends ARIMA to multiple time series, allowing each variable to be modeled as a linear function of its own past and the past of all other variables. Essential for cross-asset analysis — e.g., modeling NIFTY50, Bank Nifty, and INR/USD jointly to capture spillover effects. Granger causality tests reveal which series "causes" others, giving genuine predictive insight.', complexity:{implementation:3,computation:3,tuning:3,interpretability:4}, useFor:['Cross-Asset Relationships','Macro-Financial Linkages','Impulse Response Analysis','Granger Causality','Index Basket Modeling'], pros:["No need to distinguish endogenous/exogenous",'Granger causality testing built in','Impulse response functions for shock analysis','Structural VAR (SVAR) adds economic constraints'], cons:['Parameter explosion with many variables','Stationarity required for all series','Out-of-sample performance can degrade','Colinearity between assets causes issues'], params:[['p (lag order)','Number of lags; use AIC/BIC to select'],['Variables','Choose correlated assets or indices'],['Deterministic','Include trend, constant, or seasonal dummies'],['Restrictions','Impose via SVAR for economic identification']], metrics:{accuracy:'★★★☆☆',speed:'★★★★☆',interpretability:'★★★★☆',complexity:'MEDIUM'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['MULTIVARIATE','LINEAR','GRANGER'] },
     ]
@@ -1353,6 +1495,85 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
   );
 }
 
+/* ─── GUIDE PANE ─── */
+function GuidePane({ sections }) {
+  const [openSecs, setOpenSecs] = useState(() => new Set(sections.map((_, i) => i)));
+
+  function toggleSec(i) {
+    setOpenSecs(prev => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i); else next.add(i);
+      return next;
+    });
+  }
+
+  function renderBlock(block, bi) {
+    switch (block.type) {
+      case 'p':
+        return <div key={bi} className="eq-guide-p">{block.text}</div>;
+      case 'callout':
+        return <div key={bi} className={`eq-guide-callout ${block.variant}`}>{block.text}</div>;
+      case 'formula':
+        return <div key={bi} className="eq-guide-formula">{block.text}</div>;
+      case 'table':
+        return (
+          <table key={bi} className="eq-guide-table">
+            <thead><tr>{block.head.map(h => <th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{block.rows.map((row, ri) => (
+              <tr key={ri}>{row.map((cell, ci) => <td key={ci}>{cell}</td>)}</tr>
+            ))}</tbody>
+          </table>
+        );
+      case 'steps':
+        return (
+          <div key={bi} className="eq-guide-steps">
+            {block.items.map((step, si) => (
+              <div key={si} className="eq-guide-step">
+                <div className="eq-guide-step-num">{si + 1}</div>
+                <div className="eq-guide-step-body">
+                  <div className="eq-guide-step-title">{step.title}</div>
+                  <div className="eq-guide-step-desc">{step.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      case 'result':
+        return (
+          <div key={bi} className="eq-guide-result">
+            {block.items.map((item, ri) => (
+              <div key={ri} className="eq-guide-result-item">
+                <div className="eq-guide-result-val">{item.val}</div>
+                <div className="eq-guide-result-lbl">{item.lbl}</div>
+              </div>
+            ))}
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <div className="eq-guide-wrap">
+      {sections.map((sec, i) => (
+        <div key={i} className="eq-guide-sec">
+          <div className="eq-guide-sec-hdr" onClick={() => toggleSec(i)}>
+            <span className="eq-guide-sec-num">{sec.num}</span>
+            <span className="eq-guide-sec-title">{sec.title}</span>
+            <span className={`eq-guide-sec-chev${openSecs.has(i) ? ' open' : ''}`}>▶</span>
+          </div>
+          {openSecs.has(i) && (
+            <div className="eq-guide-sec-body">
+              {sec.blocks.map((block, bi) => renderBlock(block, bi))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ─── MODEL DETAIL ─── */
 function ModelDetail({ modelId, user, admin, showToast }) {
   const m = MODEL_MAP[modelId];
@@ -1397,6 +1618,7 @@ function ModelDetail({ modelId, user, admin, showToast }) {
       <div className="eq-tab-bar">
         {[
           { id: 'details', label: 'DETAILS' },
+          ...(m.guide ? [{ id: 'guide', label: 'GUIDE' }] : []),
           { id: 'live', label: 'LIVE EXAMPLES', count: liveCount },
           { id: 'community', label: 'COMMUNITY', count: communityCount },
         ].map(tab => (
@@ -1457,6 +1679,13 @@ function ModelDetail({ modelId, user, admin, showToast }) {
           </div>
         </div>
       </div>
+
+      {/* Guide pane */}
+      {m.guide && (
+        <div className={`eq-pane${activeTab === 'guide' ? ' active' : ''}`}>
+          <GuidePane sections={m.guide} />
+        </div>
+      )}
 
       {/* Live examples pane */}
       <div className={`eq-pane${activeTab === 'live' ? ' active' : ''}`}>
