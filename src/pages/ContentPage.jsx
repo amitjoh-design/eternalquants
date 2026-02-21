@@ -117,6 +117,101 @@ const CSS = `
 .eq-fb-submit { padding:8px 22px; background:rgba(0,229,255,.1); border:1px solid var(--eq-cyan); color:var(--eq-cyan); font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; cursor:pointer; border-radius:2px; transition:.15s; }
 .eq-fb-submit:hover:not(:disabled) { background:rgba(0,229,255,.2); box-shadow:0 0 12px rgba(0,229,255,.15); }
 .eq-fb-submit:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ADMIN INBOX */
+.eq-inbox-btn {
+  font-family:var(--eq-mono); font-size:10px; letter-spacing:1px; white-space:nowrap;
+  color:var(--eq-gold); cursor:pointer; padding:5px 12px; border-radius:2px;
+  border:1px solid rgba(255,209,102,.3); transition:.2s; background:rgba(255,209,102,.05);
+  display:flex; align-items:center; gap:6px;
+}
+.eq-inbox-btn:hover { background:rgba(255,209,102,.12); border-color:var(--eq-gold); }
+.eq-inbox-badge {
+  background:var(--eq-gold); color:#000; border-radius:8px;
+  font-size:8px; font-weight:700; padding:1px 5px; min-width:14px; text-align:center;
+}
+.eq-inbox-overlay {
+  position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.85); backdrop-filter:blur(8px);
+  display:flex; align-items:stretch; justify-content:flex-end;
+}
+.eq-inbox-panel {
+  width:100%; max-width:680px; background:#060f09; border-left:1px solid rgba(255,209,102,.2);
+  display:flex; flex-direction:column; overflow:hidden;
+  animation:eqSlideIn .22s ease;
+}
+@keyframes eqSlideIn { from{transform:translateX(40px);opacity:0} to{transform:translateX(0);opacity:1} }
+.eq-inbox-top {
+  padding:16px 22px; border-bottom:1px solid rgba(255,209,102,.12);
+  background:linear-gradient(135deg,rgba(255,209,102,.05),transparent);
+  display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+.eq-inbox-title { font-family:var(--eq-display); font-size:13px; font-weight:700; letter-spacing:2px; color:var(--eq-gold); }
+.eq-inbox-close { width:28px; height:28px; border-radius:2px; display:flex; align-items:center; justify-content:center; border:1px solid var(--eq-border); color:var(--eq-muted); cursor:pointer; font-size:14px; transition:.15s; }
+.eq-inbox-close:hover { border-color:var(--eq-red); color:var(--eq-red); }
+.eq-inbox-filters { padding:10px 22px; border-bottom:1px solid var(--eq-border); display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap; align-items:center; }
+.eq-inbox-filter {
+  font-family:var(--eq-mono); font-size:9px; letter-spacing:1px; padding:4px 10px;
+  border-radius:2px; cursor:pointer; border:1px solid var(--eq-border); color:var(--eq-muted);
+  background:transparent; transition:.15s;
+}
+.eq-inbox-filter.active { border-color:var(--eq-gold); color:var(--eq-gold); background:rgba(255,209,102,.08); }
+.eq-inbox-count { font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:1px; margin-left:auto; }
+.eq-inbox-list { flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px; }
+.eq-inbox-card {
+  background:rgba(0,0,0,.3); border:1px solid var(--eq-border); border-radius:4px;
+  overflow:hidden; transition:.15s; cursor:pointer;
+}
+.eq-inbox-card:hover { border-color:rgba(255,209,102,.25); }
+.eq-inbox-card.expanded { border-color:rgba(255,209,102,.35); }
+.eq-inbox-card-top { padding:12px 14px; display:flex; align-items:flex-start; gap:12px; }
+.eq-inbox-type-badge {
+  font-family:var(--eq-mono); font-size:8px; letter-spacing:1px; padding:2px 7px;
+  border-radius:1px; flex-shrink:0; text-transform:uppercase; border:1px solid;
+}
+.eq-inbox-type-feedback { border-color:rgba(0,229,255,.3); color:var(--eq-cyan); background:rgba(0,229,255,.06); }
+.eq-inbox-type-suggestion { border-color:rgba(0,255,140,.3); color:var(--eq-green); background:rgba(0,255,140,.06); }
+.eq-inbox-type-bug_report { border-color:rgba(255,77,109,.3); color:var(--eq-red); background:rgba(255,77,109,.06); }
+.eq-inbox-type-question { border-color:rgba(255,209,102,.3); color:var(--eq-gold); background:rgba(255,209,102,.06); }
+.eq-inbox-type-other { border-color:var(--eq-border); color:var(--eq-muted); background:rgba(255,255,255,.03); }
+.eq-inbox-meta { flex:1; min-width:0; }
+.eq-inbox-user { font-family:var(--eq-mono); font-size:11px; color:var(--eq-white); margin-bottom:2px; }
+.eq-inbox-email { font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:.5px; }
+.eq-inbox-time { font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:.5px; flex-shrink:0; }
+.eq-inbox-msg { padding:0 14px 12px; font-size:13px; line-height:1.65; color:rgba(232,244,237,.75); font-family:var(--eq-body); }
+.eq-inbox-status-row { padding:8px 14px; border-top:1px solid var(--eq-border); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.eq-inbox-status-btn {
+  font-family:var(--eq-mono); font-size:8px; letter-spacing:1px; padding:3px 10px;
+  border-radius:1px; cursor:pointer; border:1px solid var(--eq-border); color:var(--eq-muted);
+  background:transparent; transition:.15s;
+}
+.eq-inbox-status-btn:hover { border-color:var(--eq-gold); color:var(--eq-gold); }
+.eq-inbox-status-btn.active { border-color:var(--eq-gold); color:var(--eq-gold); background:rgba(255,209,102,.1); }
+.eq-inbox-status-new { border-color:rgba(0,229,255,.3); color:var(--eq-cyan); }
+.eq-inbox-status-reviewed { border-color:rgba(0,255,140,.3); color:var(--eq-green); }
+.eq-inbox-status-done { border-color:rgba(255,255,255,.2); color:var(--eq-muted); }
+.eq-inbox-reply-area { padding:0 14px 12px; display:flex; flex-direction:column; gap:8px; }
+.eq-inbox-reply-input {
+  width:100%; background:rgba(0,0,0,.3); border:1px solid var(--eq-border);
+  border-radius:2px; padding:9px 12px; font-family:var(--eq-body); font-size:12px;
+  color:var(--eq-white); resize:none; outline:none; transition:.15s; height:72px;
+}
+.eq-inbox-reply-input:focus { border-color:rgba(255,209,102,.35); }
+.eq-inbox-reply-input::placeholder { color:var(--eq-muted); }
+.eq-inbox-reply-footer { display:flex; justify-content:flex-end; gap:8px; }
+.eq-inbox-reply-btn {
+  padding:6px 16px; background:rgba(255,209,102,.1); border:1px solid var(--eq-gold);
+  color:var(--eq-gold); font-family:var(--eq-mono); font-size:9px; letter-spacing:2px;
+  cursor:pointer; border-radius:2px; transition:.15s;
+}
+.eq-inbox-reply-btn:hover:not(:disabled) { background:rgba(255,209,102,.2); }
+.eq-inbox-reply-btn:disabled { opacity:.35; cursor:not-allowed; }
+.eq-inbox-admin-reply { padding:8px 14px 12px; margin:0 14px 10px; background:rgba(255,209,102,.04); border:1px solid rgba(255,209,102,.15); border-radius:2px; }
+.eq-inbox-admin-reply-lbl { font-family:var(--eq-mono); font-size:8px; letter-spacing:2px; color:var(--eq-gold); margin-bottom:5px; }
+.eq-inbox-admin-reply-txt { font-size:12px; color:rgba(232,244,237,.7); font-family:var(--eq-body); line-height:1.6; }
+.eq-inbox-empty { flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; opacity:.4; }
+.eq-inbox-empty-icon { font-size:36px; }
+.eq-inbox-empty-txt { font-family:var(--eq-mono); font-size:10px; letter-spacing:3px; color:var(--eq-muted); }
+
 .eq-topbar-center {
   position:absolute; left:50%; transform:translateX(-50%);
   font-family:var(--eq-mono); font-size:11px; letter-spacing:4px;
@@ -1162,6 +1257,174 @@ function FileViewer({ file, onClose }) {
   );
 }
 
+/* ─── ADMIN INBOX ─── */
+const STATUS_LABELS = { new: 'NEW', reviewed: 'REVIEWED', done: 'DONE' };
+const TYPE_FILTERS = ['all', 'feedback', 'suggestion', 'bug_report', 'question', 'other'];
+
+function AdminInbox({ onClose, showToast }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [expandedId, setExpandedId] = useState(null);
+  const [replies, setReplies] = useState({});
+  const [saving, setSaving] = useState({});
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => { loadFeedback(); }, []);
+
+  async function loadFeedback() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) {
+      setItems(data || []);
+      setUnread((data || []).filter(d => d.status === 'new').length);
+    }
+    setLoading(false);
+  }
+
+  async function updateStatus(id, status) {
+    setSaving(s => ({ ...s, [id]: true }));
+    await supabase.from('feedback').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    setItems(prev => prev.map(i => i.id === id ? { ...i, status } : i));
+    setSaving(s => ({ ...s, [id]: false }));
+  }
+
+  async function saveReply(id) {
+    const reply = replies[id]?.trim();
+    if (!reply) return;
+    setSaving(s => ({ ...s, [id + '_reply']: true }));
+    const { error } = await supabase.from('feedback')
+      .update({ admin_reply: reply, status: 'reviewed', updated_at: new Date().toISOString() })
+      .eq('id', id);
+    setSaving(s => ({ ...s, [id + '_reply']: false }));
+    if (error) { showToast('Failed to save reply', 'error'); return; }
+    setItems(prev => prev.map(i => i.id === id ? { ...i, admin_reply: reply, status: 'reviewed' } : i));
+    setReplies(r => ({ ...r, [id]: '' }));
+    showToast('Reply saved ✓', 'success');
+  }
+
+  function fmtDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) +
+      ' · ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  const filtered = filter === 'all' ? items : items.filter(i => i.type === filter);
+
+  return (
+    <div className="eq-inbox-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="eq-inbox-panel">
+        {/* Header */}
+        <div className="eq-inbox-top">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="eq-inbox-title">✦ USER INBOX</div>
+            {unread > 0 && <span className="eq-inbox-badge">{unread} NEW</span>}
+          </div>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <button onClick={loadFeedback} style={{ fontFamily: 'var(--eq-mono)', fontSize: 9, letterSpacing: 1, color: 'var(--eq-muted)', background: 'transparent', border: '1px solid var(--eq-border)', borderRadius: 2, padding: '4px 10px', cursor: 'pointer' }}>↺ REFRESH</button>
+            <div className="eq-inbox-close" onClick={onClose}>✕</div>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="eq-inbox-filters">
+          {TYPE_FILTERS.map(f => (
+            <button key={f} className={`eq-inbox-filter${filter === f ? ' active' : ''}`} onClick={() => setFilter(f)}>
+              {f === 'all' ? 'ALL' : f.replace('_', ' ').toUpperCase()}
+            </button>
+          ))}
+          <span className="eq-inbox-count">{filtered.length} item{filtered.length !== 1 ? 's' : ''}</span>
+        </div>
+
+        {/* List */}
+        <div className="eq-inbox-list">
+          {loading ? (
+            <div className="eq-loading"><div className="eq-spinner" /><span>LOADING MESSAGES...</span></div>
+          ) : filtered.length === 0 ? (
+            <div className="eq-inbox-empty">
+              <div className="eq-inbox-empty-icon">📭</div>
+              <div className="eq-inbox-empty-txt">NO MESSAGES YET</div>
+            </div>
+          ) : filtered.map(item => {
+            const isOpen = expandedId === item.id;
+            return (
+              <div key={item.id} className={`eq-inbox-card${isOpen ? ' expanded' : ''}`}>
+                {/* Card top — click to expand */}
+                <div className="eq-inbox-card-top" onClick={() => {
+                  setExpandedId(isOpen ? null : item.id);
+                  if (item.status === 'new' && !isOpen) updateStatus(item.id, 'reviewed');
+                }}>
+                  <div className={`eq-inbox-type-badge eq-inbox-type-${item.type || 'other'}`}>
+                    {(item.type || 'other').replace('_', ' ')}
+                  </div>
+                  <div className="eq-inbox-meta">
+                    <div className="eq-inbox-user">{item.user_name || 'Anonymous'}</div>
+                    <div className="eq-inbox-email">{item.user_email || '—'}</div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                    <div className="eq-inbox-time">{fmtDate(item.created_at)}</div>
+                    <span className={`eq-inbox-type-badge eq-inbox-status-${item.status || 'new'}`} style={{ fontSize: 7 }}>
+                      {STATUS_LABELS[item.status] || 'NEW'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Expanded content */}
+                {isOpen && (
+                  <>
+                    <div className="eq-inbox-msg">{item.message}</div>
+
+                    {/* Existing admin reply */}
+                    {item.admin_reply && (
+                      <div className="eq-inbox-admin-reply">
+                        <div className="eq-inbox-admin-reply-lbl">YOUR REPLY</div>
+                        <div className="eq-inbox-admin-reply-txt">{item.admin_reply}</div>
+                      </div>
+                    )}
+
+                    {/* Status buttons */}
+                    <div className="eq-inbox-status-row">
+                      <span style={{ fontFamily: 'var(--eq-mono)', fontSize: 9, color: 'var(--eq-muted)', letterSpacing: 1, marginRight: 4 }}>STATUS:</span>
+                      {Object.entries(STATUS_LABELS).map(([s, lbl]) => (
+                        <button key={s} className={`eq-inbox-status-btn${item.status === s ? ' active' : ''}`}
+                          disabled={saving[item.id]}
+                          onClick={e => { e.stopPropagation(); updateStatus(item.id, s); }}>
+                          {lbl}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Reply area */}
+                    <div className="eq-inbox-reply-area">
+                      <textarea
+                        className="eq-inbox-reply-input"
+                        placeholder="Type a reply note (saved internally for reference)..."
+                        value={replies[item.id] || ''}
+                        onChange={e => setReplies(r => ({ ...r, [item.id]: e.target.value }))}
+                      />
+                      <div className="eq-inbox-reply-footer">
+                        <button className="eq-inbox-reply-btn"
+                          disabled={!replies[item.id]?.trim() || saving[item.id + '_reply']}
+                          onClick={() => saveReply(item.id)}>
+                          {saving[item.id + '_reply'] ? 'SAVING...' : 'SAVE REPLY →'}
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── FEEDBACK MODAL ─── */
 // SQL to create feedback table (run once in Supabase SQL Editor):
 // create table feedback (id uuid primary key default gen_random_uuid(), user_id uuid references auth.users(id), user_email text, user_name text, type text default 'feedback', message text not null, created_at timestamptz default now());
@@ -1722,6 +1985,15 @@ export default function ContentPage() {
   const [selectedModel, setSelectedModel] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showInbox, setShowInbox] = useState(false);
+  const [inboxUnread, setInboxUnread] = useState(0);
+
+  // Load unread count for admin badge
+  useEffect(() => {
+    if (!admin) return;
+    supabase.from('feedback').select('id', { count: 'exact', head: true }).eq('status', 'new')
+      .then(({ count }) => setInboxUnread(count || 0));
+  }, [admin]);
   const { toast, showToast } = useToast();
 
   const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'USER';
@@ -1818,6 +2090,12 @@ export default function ContentPage() {
               <div key={pill} className={`eq-nav-pill${pill === 'MODELS' ? ' active' : ''}`}>{pill}</div>
             ))}
             <button className="eq-feedback-btn" onClick={() => setShowFeedback(true)}>✦ TALK TO US</button>
+            {admin && (
+              <button className="eq-inbox-btn" onClick={() => { setShowInbox(true); setInboxUnread(0); }}>
+                ✉ INBOX
+                {inboxUnread > 0 && <span className="eq-inbox-badge">{inboxUnread}</span>}
+              </button>
+            )}
             <div className="eq-user-chip" onClick={e => { e.stopPropagation(); setShowUserMenu(v => !v); }}>
               <div className="eq-avatar">{userInitial}</div>
               <span className="eq-user-name">{userName.toUpperCase()}</span>
@@ -1917,6 +2195,14 @@ export default function ContentPage() {
         <FeedbackModal
           user={user}
           onClose={() => setShowFeedback(false)}
+          showToast={showToast}
+        />
+      )}
+
+      {/* ADMIN INBOX */}
+      {showInbox && admin && (
+        <AdminInbox
+          onClose={() => setShowInbox(false)}
           showToast={showToast}
         />
       )}
