@@ -646,52 +646,45 @@ const CSS = `
 .eq-rl .eq-cat-name { color:var(--eq-red); }
 .eq-rl .eq-cat-badge { background:rgba(255,77,109,.1); color:var(--eq-red); border:1px solid rgba(255,77,109,.2); }
 
-/* GUIDE SECTIONS */
-.eq-guide-wrap { display:flex; flex-direction:column; gap:16px; padding:20px 22px; flex:1; overflow-y:auto; }
-.eq-guide-sec { background:rgba(0,0,0,.22); border:1px solid var(--eq-border); border-radius:4px; overflow:hidden; }
-.eq-guide-sec-hdr {
-  padding:12px 18px; display:flex; align-items:center; gap:12px; cursor:pointer;
-  background:linear-gradient(135deg,rgba(0,255,140,.04),transparent);
-  border-bottom:1px solid var(--eq-border); user-select:none;
-}
-.eq-guide-sec-hdr:hover { background:rgba(0,255,140,.05); }
-.eq-guide-sec-num { font-family:var(--eq-mono); font-size:9px; letter-spacing:3px; color:var(--eq-green); opacity:.7; flex-shrink:0; }
-.eq-guide-sec-title { font-family:var(--eq-display); font-size:13px; font-weight:700; color:var(--eq-white); flex:1; letter-spacing:.5px; }
-.eq-guide-sec-chev { font-size:10px; color:var(--eq-muted); transition:.2s; flex-shrink:0; }
-.eq-guide-sec-chev.open { transform:rotate(90deg); }
-.eq-guide-sec-body { padding:18px; display:flex; flex-direction:column; gap:12px; }
-.eq-guide-p { font-size:13px; line-height:1.8; color:rgba(232,244,237,.78); font-weight:400; }
-.eq-guide-callout {
-  padding:12px 16px; border-radius:3px; border-left:3px solid;
-  font-size:12px; line-height:1.7; font-family:var(--eq-body);
-}
-.eq-guide-callout.c-green { border-color:var(--eq-green); background:rgba(0,255,140,.05); color:rgba(0,255,140,.9); }
-.eq-guide-callout.c-cyan { border-color:var(--eq-cyan); background:rgba(0,229,255,.05); color:rgba(0,229,255,.9); }
-.eq-guide-callout.c-gold { border-color:var(--eq-gold); background:rgba(255,209,102,.05); color:rgba(255,209,102,.9); }
-.eq-guide-callout.c-red { border-color:var(--eq-red); background:rgba(255,77,109,.05); color:rgba(255,77,109,.9); }
-.eq-guide-formula {
-  font-family:var(--eq-mono); font-size:12px; line-height:1.9;
-  background:rgba(0,0,0,.35); border:1px solid rgba(0,255,140,.1);
-  border-radius:3px; padding:14px 18px; color:var(--eq-green); letter-spacing:.5px; white-space:pre-wrap;
-}
-.eq-guide-table { width:100%; border-collapse:collapse; font-family:var(--eq-mono); font-size:11px; }
-.eq-guide-table th { background:rgba(0,255,140,.07); color:var(--eq-green); padding:8px 12px; text-align:left; border-bottom:1px solid var(--eq-border); letter-spacing:1px; font-size:9px; text-transform:uppercase; }
-.eq-guide-table td { padding:7px 12px; color:rgba(232,244,237,.7); border-bottom:1px solid rgba(0,255,140,.04); vertical-align:top; line-height:1.5; }
-.eq-guide-table tr:last-child td { border-bottom:none; }
-.eq-guide-table td:first-child { color:var(--eq-cyan); }
-.eq-guide-steps { display:flex; flex-direction:column; gap:10px; }
-.eq-guide-step { display:flex; gap:12px; align-items:flex-start; }
-.eq-guide-step-num { width:22px; height:22px; border-radius:50%; background:rgba(0,255,140,.12); border:1px solid rgba(0,255,140,.25); display:flex; align-items:center; justify-content:center; font-family:var(--eq-mono); font-size:9px; color:var(--eq-green); flex-shrink:0; margin-top:1px; }
-.eq-guide-step-body { flex:1; }
-.eq-guide-step-title { font-family:var(--eq-mono); font-size:11px; color:var(--eq-white); margin-bottom:2px; letter-spacing:.5px; }
-.eq-guide-step-desc { font-size:12px; color:rgba(232,244,237,.6); line-height:1.6; font-family:var(--eq-body); }
-.eq-guide-result { display:flex; flex-wrap:wrap; gap:10px; padding:14px; background:rgba(0,255,140,.03); border:1px solid rgba(0,255,140,.15); border-radius:3px; }
-.eq-guide-result-item { display:flex; flex-direction:column; align-items:center; flex:1; min-width:100px; }
-.eq-guide-result-val { font-family:var(--eq-display); font-size:18px; font-weight:700; color:var(--eq-green); line-height:1; text-align:center; }
-.eq-guide-result-lbl { font-family:var(--eq-mono); font-size:8px; letter-spacing:2px; color:var(--eq-muted); margin-top:4px; text-transform:uppercase; text-align:center; }
+/* GUIDE DOCUMENTS */
+.eq-guides-wrap { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+.eq-guides-list { flex:1; overflow-y:auto; padding:16px 22px; display:flex; flex-direction:column; gap:10px; }
+.eq-guide-admin-bar { padding:10px 22px; border-bottom:1px solid var(--eq-border); display:flex; align-items:center; gap:12px; flex-shrink:0; background:rgba(255,127,81,.02); }
+.eq-guide-pub-toggle { font-family:var(--eq-mono); font-size:9px; letter-spacing:2px; padding:6px 16px; border-radius:2px; cursor:pointer; border:1px solid rgba(255,127,81,.35); color:var(--eq-orange); background:rgba(255,127,81,.06); transition:.15s; }
+.eq-guide-pub-toggle:hover { background:rgba(255,127,81,.14); border-color:var(--eq-orange); }
+.eq-guide-card { display:flex; align-items:center; gap:14px; padding:14px 16px; background:rgba(0,0,0,.25); border:1px solid var(--eq-border); border-radius:3px; transition:.2s; position:relative; overflow:hidden; }
+.eq-guide-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--eq-cyan); }
+.eq-guide-card.guide-hidden::before { background:var(--eq-orange); }
+.eq-guide-card:hover { border-color:var(--eq-border2); background:rgba(0,229,255,.03); transform:translateX(2px); }
+.eq-guide-card-icon { width:42px; height:42px; border-radius:4px; background:rgba(0,229,255,.08); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.eq-guide-card-info { flex:1; min-width:0; }
+.eq-guide-card-title { font-family:var(--eq-mono); font-size:12px; color:var(--eq-white); margin-bottom:3px; }
+.eq-guide-card-desc { font-size:11px; color:rgba(232,244,237,.5); font-family:var(--eq-body); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.eq-guide-card-meta { display:flex; gap:8px; align-items:center; font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:.5px; margin-top:4px; flex-wrap:wrap; }
+.eq-guide-card-author { color:var(--eq-cyan); }
+.eq-guide-card-actions { display:flex; gap:8px; flex-shrink:0; }
+.eq-guide-hidden-badge { font-family:var(--eq-mono); font-size:7px; letter-spacing:1px; padding:2px 6px; border-radius:1px; border:1px solid rgba(255,127,81,.3); color:var(--eq-orange); background:rgba(255,127,81,.06); text-transform:uppercase; }
+/* Publish Guide Form */
+.eq-pub-guide-form { margin:0 22px 14px; background:rgba(0,0,0,.3); border:1px solid rgba(255,127,81,.2); border-radius:4px; padding:18px; display:flex; flex-direction:column; gap:11px; flex-shrink:0; }
+.eq-pub-guide-hdr { font-family:var(--eq-mono); font-size:9px; letter-spacing:3px; color:var(--eq-orange); text-transform:uppercase; }
+.eq-pub-guide-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.eq-pub-guide-input { background:rgba(0,255,140,.03); border:1px solid var(--eq-border); border-radius:2px; padding:8px 12px; color:var(--eq-white); font-family:var(--eq-mono); font-size:11px; outline:none; transition:.2s; width:100%; }
+.eq-pub-guide-input:focus { border-color:rgba(255,127,81,.4); }
+.eq-pub-guide-input::placeholder { color:var(--eq-muted); }
+.eq-pub-guide-sublabel { font-family:var(--eq-mono); font-size:8px; letter-spacing:2px; color:var(--eq-muted); margin-bottom:5px; }
+.eq-pub-guide-textarea { background:rgba(0,0,0,.3); border:1px solid var(--eq-border); border-radius:2px; padding:10px 12px; color:var(--eq-white); font-family:var(--eq-mono); font-size:10px; outline:none; transition:.2s; width:100%; resize:vertical; min-height:130px; line-height:1.5; }
+.eq-pub-guide-textarea:focus { border-color:rgba(255,127,81,.4); }
+.eq-pub-guide-textarea::placeholder { color:var(--eq-muted); }
+.eq-pub-guide-footer { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.eq-pub-guide-file-btn { padding:7px 14px; background:transparent; border:1px solid var(--eq-border); color:var(--eq-muted); font-family:var(--eq-mono); font-size:9px; letter-spacing:1px; cursor:pointer; border-radius:2px; transition:.15s; }
+.eq-pub-guide-file-btn:hover { border-color:rgba(255,127,81,.4); color:var(--eq-orange); }
+.eq-pub-guide-char { font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); margin-left:auto; }
+.eq-pub-guide-submit { padding:7px 20px; background:rgba(255,127,81,.1); border:1px solid var(--eq-orange); color:var(--eq-orange); font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; cursor:pointer; border-radius:2px; transition:.15s; }
+.eq-pub-guide-submit:hover:not(:disabled) { background:rgba(255,127,81,.2); }
+.eq-pub-guide-submit:disabled { opacity:.35; cursor:not-allowed; }
 `;
 
-/* ─── ARIMA GUIDE DATA ─── */
+/* ─── ARIMA GUIDE (kept as dead code — DB-driven system replaces this) ─── */
 const ARIMA_GUIDE = [
   {
     num: '01', title: 'What is ARIMA?',
@@ -794,7 +787,7 @@ const CATEGORIES = [
   {
     id:'classical', label:'Classical Statistical', icon:'📐', short:'STAT',
     models:[
-      { id:'arima', name:'ARIMA / SARIMA', tag:'CLASSIC', fullName:'AutoRegressive Integrated Moving Average', overview:'ARIMA is the bedrock of time series forecasting. It combines autoregression (AR), differencing for stationarity (I), and moving average (MA) components. SARIMA extends it with seasonal terms, making it extremely powerful for cyclic financial data like indices, commodity prices, and currency pairs. For NIFTY 50 and similar series, SARIMA remains the best baseline you can build against.', complexity:{implementation:3,computation:2,tuning:3,interpretability:5}, useFor:['Trend Forecasting','Mean Reversion','Seasonality Capture','Price Level Prediction','Volatility Baseline'], pros:['Highly interpretable coefficients','Strong statistical foundation — AIC/BIC/Ljung-Box','Works well on stationary financial returns','SARIMA handles quarterly/monthly seasonality','Well-understood confidence intervals'], cons:['Assumes linear structure — misses non-linearity','Requires manual order selection (p,d,q)','Struggles with structural breaks','Single-step forecast degrades quickly'], params:[['p (AR order)','Lag terms — typically 1–3 for daily data'],['d (Difference)','1 for prices, 0 for returns'],['q (MA order)','Error lag terms'],['P,D,Q,s','Seasonal counterparts; s=5 for weekly, 252 for annual'],['AIC/BIC','Use for automatic order selection']], metrics:{accuracy:'★★★☆☆',speed:'★★★★★',interpretability:'★★★★★',complexity:'LOW'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['UNIVARIATE','STATIONARY','LINEAR'], guide: ARIMA_GUIDE },
+      { id:'arima', name:'ARIMA / SARIMA', tag:'CLASSIC', fullName:'AutoRegressive Integrated Moving Average', overview:'ARIMA is the bedrock of time series forecasting. It combines autoregression (AR), differencing for stationarity (I), and moving average (MA) components. SARIMA extends it with seasonal terms, making it extremely powerful for cyclic financial data like indices, commodity prices, and currency pairs. For NIFTY 50 and similar series, SARIMA remains the best baseline you can build against.', complexity:{implementation:3,computation:2,tuning:3,interpretability:5}, useFor:['Trend Forecasting','Mean Reversion','Seasonality Capture','Price Level Prediction','Volatility Baseline'], pros:['Highly interpretable coefficients','Strong statistical foundation — AIC/BIC/Ljung-Box','Works well on stationary financial returns','SARIMA handles quarterly/monthly seasonality','Well-understood confidence intervals'], cons:['Assumes linear structure — misses non-linearity','Requires manual order selection (p,d,q)','Struggles with structural breaks','Single-step forecast degrades quickly'], params:[['p (AR order)','Lag terms — typically 1–3 for daily data'],['d (Difference)','1 for prices, 0 for returns'],['q (MA order)','Error lag terms'],['P,D,Q,s','Seasonal counterparts; s=5 for weekly, 252 for annual'],['AIC/BIC','Use for automatic order selection']], metrics:{accuracy:'★★★☆☆',speed:'★★★★★',interpretability:'★★★★★',complexity:'LOW'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['UNIVARIATE','STATIONARY','LINEAR'] },
       { id:'garch', name:'GARCH', tag:'VOL', fullName:'Generalized AutoRegressive Conditional Heteroskedasticity', overview:"GARCH models the time-varying variance (volatility) of financial returns. Markets don't have constant volatility — calm periods are followed by turbulent ones (volatility clustering). GARCH(1,1) is the workhorse: it captures this clustering, making it essential for options pricing, VaR calculation, and risk management in Indian markets. EGARCH and GJR-GARCH add asymmetry for the leverage effect.", complexity:{implementation:3,computation:3,tuning:3,interpretability:4}, useFor:['Volatility Forecasting','Options Pricing','VaR / Risk Management','Portfolio Optimization','Regime Detection'], pros:['Captures volatility clustering perfectly','EGARCH handles leverage effect','Fast estimation via MLE','Widely used in regulatory frameworks','Excellent for options Greeks'], cons:['Models variance only, not price direction','Requires ARCH-LM test for applicability','Tail risk can be underestimated','Parameter instability in regime shifts'], params:[['ω (omega)','Long-run variance term'],['α (alpha)','Weight on past squared residuals'],['β (beta)','Weight on past variance'],['p, q','ARCH and GARCH lags'],['Distribution','Normal, t, GED for fat tails']], metrics:{accuracy:'★★★★☆',speed:'★★★★★',interpretability:'★★★★☆',complexity:'LOW-MED'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['VOLATILITY','UNIVARIATE','MLE'] },
       { id:'var', name:'VAR', tag:'MULTI', fullName:'Vector AutoRegression', overview:'VAR extends ARIMA to multiple time series, allowing each variable to be modeled as a linear function of its own past and the past of all other variables. Essential for cross-asset analysis — e.g., modeling NIFTY50, Bank Nifty, and INR/USD jointly to capture spillover effects. Granger causality tests reveal which series "causes" others, giving genuine predictive insight.', complexity:{implementation:3,computation:3,tuning:3,interpretability:4}, useFor:['Cross-Asset Relationships','Macro-Financial Linkages','Impulse Response Analysis','Granger Causality','Index Basket Modeling'], pros:["No need to distinguish endogenous/exogenous",'Granger causality testing built in','Impulse response functions for shock analysis','Structural VAR (SVAR) adds economic constraints'], cons:['Parameter explosion with many variables','Stationarity required for all series','Out-of-sample performance can degrade','Colinearity between assets causes issues'], params:[['p (lag order)','Number of lags; use AIC/BIC to select'],['Variables','Choose correlated assets or indices'],['Deterministic','Include trend, constant, or seasonal dummies'],['Restrictions','Impose via SVAR for economic identification']], metrics:{accuracy:'★★★☆☆',speed:'★★★★☆',interpretability:'★★★★☆',complexity:'MEDIUM'}, color:'var(--eq-cyan)', bg:'rgba(0,229,255,.1)', tags:['MULTIVARIATE','LINEAR','GRANGER'] },
     ]
@@ -1136,6 +1129,62 @@ a{color:#00e5ff;}
 <div id="nb-wrap">${cellsHtml}</div>
 </body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
+/* ─── GUIDE → NEW WINDOW ─── */
+function openGuideInNewWindow(htmlContent, title) {
+  function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  // If content is already a full HTML document, open as-is
+  const trimmed = (htmlContent || '').trim();
+  let finalHtml;
+  if (trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html')) {
+    finalHtml = htmlContent;
+  } else {
+    // Wrap body content with EQ dark-themed template
+    finalHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} — EternalQuants</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#030a06;color:#e8f4ed;font-family:'Rajdhani',sans-serif;font-size:15px;line-height:1.7;}
+a{color:#00e5ff;}
+#gd-hdr{background:rgba(6,15,9,.97);border-bottom:1px solid rgba(0,255,140,.2);padding:13px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:16px;}
+#gd-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,#00ff8c,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#gd-title{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(0,255,140,.75);letter-spacing:1px;}
+#gd-meta{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(232,244,237,.35);}
+#gd-wrap{max-width:900px;margin:32px auto;padding:0 24px 80px;}
+h1{font-family:'Orbitron',monospace;font-size:20px;color:#00ff8c;margin:24px 0 12px;letter-spacing:1px;}
+h2{font-family:'Orbitron',monospace;font-size:16px;color:#00e5ff;margin:20px 0 10px;}
+h3{font-size:15px;font-weight:600;color:#ffd166;margin:16px 0 8px;}
+h4,h5,h6{font-size:14px;font-weight:600;color:rgba(232,244,237,.85);margin:12px 0 6px;}
+p{margin-bottom:10px;color:rgba(232,244,237,.85);}
+ul,ol{margin:8px 0 12px 22px;}
+li{margin-bottom:4px;color:rgba(232,244,237,.8);}
+strong{color:#fff;font-weight:600;}
+em{color:#ffd166;font-style:italic;}
+code{background:rgba(0,255,140,.1);color:#00ff8c;padding:2px 6px;border-radius:3px;font-family:'Share Tech Mono',monospace;font-size:12px;}
+pre{background:rgba(0,0,0,.4);border:1px solid rgba(0,255,140,.12);padding:16px;border-radius:4px;overflow-x:auto;margin:12px 0;}
+pre code{background:none;color:#e8f4ed;padding:0;font-size:13px;line-height:1.6;}
+hr{border:none;border-top:1px solid rgba(0,255,140,.15);margin:20px 0;}
+blockquote{border-left:3px solid rgba(0,229,255,.4);padding:10px 18px;margin:12px 0;background:rgba(0,229,255,.04);color:rgba(232,244,237,.8);}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13px;}
+th{background:rgba(0,255,140,.07);color:#00ff8c;padding:9px 14px;text-align:left;border-bottom:1px solid rgba(0,255,140,.18);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;}
+td{padding:8px 14px;border-bottom:1px solid rgba(0,255,140,.06);color:rgba(232,244,237,.78);}
+tr:hover td{background:rgba(0,255,140,.025);}
+img{max-width:100%;height:auto;border-radius:4px;margin:8px 0;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:rgba(0,255,140,.2);border-radius:4px;}
+</style></head><body>
+<div id="gd-hdr">
+  <div id="gd-logo">⊙ EternalQuants</div>
+  <div id="gd-title">📄 ${esc(title)}</div>
+  <div id="gd-meta">GUIDE &nbsp;·&nbsp; VIEW ONLY</div>
+</div>
+<div id="gd-wrap">${htmlContent}</div>
+</body></html>`;
+  }
+  const blob = new Blob([finalHtml], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   window.open(url, '_blank');
 }
@@ -1758,81 +1807,204 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
   );
 }
 
-/* ─── GUIDE PANE ─── */
-function GuidePane({ sections }) {
-  const [openSecs, setOpenSecs] = useState(() => new Set(sections.map((_, i) => i)));
+/* ─── PUBLISH GUIDE FORM (admin) ─── */
+function PublishGuideForm({ modelId, admin, showToast, onPublished }) {
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+  const [author, setAuthor] = useState('EternalQuants Team');
+  const [htmlContent, setHtmlContent] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  function toggleSec(i) {
-    setOpenSecs(prev => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i); else next.add(i);
-      return next;
-    });
-  }
-
-  function renderBlock(block, bi) {
-    switch (block.type) {
-      case 'p':
-        return <div key={bi} className="eq-guide-p">{block.text}</div>;
-      case 'callout':
-        return <div key={bi} className={`eq-guide-callout ${block.variant}`}>{block.text}</div>;
-      case 'formula':
-        return <div key={bi} className="eq-guide-formula">{block.text}</div>;
-      case 'table':
-        return (
-          <table key={bi} className="eq-guide-table">
-            <thead><tr>{block.head.map(h => <th key={h}>{h}</th>)}</tr></thead>
-            <tbody>{block.rows.map((row, ri) => (
-              <tr key={ri}>{row.map((cell, ci) => <td key={ci}>{cell}</td>)}</tr>
-            ))}</tbody>
-          </table>
-        );
-      case 'steps':
-        return (
-          <div key={bi} className="eq-guide-steps">
-            {block.items.map((step, si) => (
-              <div key={si} className="eq-guide-step">
-                <div className="eq-guide-step-num">{si + 1}</div>
-                <div className="eq-guide-step-body">
-                  <div className="eq-guide-step-title">{step.title}</div>
-                  <div className="eq-guide-step-desc">{step.desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      case 'result':
-        return (
-          <div key={bi} className="eq-guide-result">
-            {block.items.map((item, ri) => (
-              <div key={ri} className="eq-guide-result-item">
-                <div className="eq-guide-result-val">{item.val}</div>
-                <div className="eq-guide-result-lbl">{item.lbl}</div>
-              </div>
-            ))}
-          </div>
-        );
-      default:
-        return null;
+  function handleFileUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith('.html') && !file.name.endsWith('.htm')) {
+      showToast('Only .html files are supported', 'error');
+      return;
     }
+    const reader = new FileReader();
+    reader.onload = ev => setHtmlContent(ev.target.result || '');
+    reader.readAsText(file);
   }
+
+  async function handleSubmit() {
+    if (!title.trim() || !htmlContent.trim()) {
+      showToast('Title and HTML content are required', 'error');
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from('model_guides').insert({
+      model_id: modelId,
+      title: title.trim(),
+      description: desc.trim() || null,
+      html_content: htmlContent,
+      author_name: author.trim() || 'EternalQuants Team',
+      is_active: true,
+    });
+    setSaving(false);
+    if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    showToast('Guide published!', 'success');
+    setTitle(''); setDesc(''); setHtmlContent(''); setAuthor('EternalQuants Team');
+    onPublished?.();
+  }
+
+  if (!admin) return null;
 
   return (
-    <div className="eq-guide-wrap">
-      {sections.map((sec, i) => (
-        <div key={i} className="eq-guide-sec">
-          <div className="eq-guide-sec-hdr" onClick={() => toggleSec(i)}>
-            <span className="eq-guide-sec-num">{sec.num}</span>
-            <span className="eq-guide-sec-title">{sec.title}</span>
-            <span className={`eq-guide-sec-chev${openSecs.has(i) ? ' open' : ''}`}>▶</span>
-          </div>
-          {openSecs.has(i) && (
-            <div className="eq-guide-sec-body">
-              {sec.blocks.map((block, bi) => renderBlock(block, bi))}
-            </div>
-          )}
+    <div className="eq-pub-guide-form">
+      <div className="eq-pub-guide-hdr">📋 PUBLISH NEW GUIDE</div>
+      <div className="eq-pub-guide-grid">
+        <div>
+          <label className="eq-pub-guide-sublabel">TITLE *</label>
+          <input className="eq-pub-guide-input" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Guide 1: NIFTY 50 ARIMA Analysis" maxLength={120} />
         </div>
-      ))}
+        <div>
+          <label className="eq-pub-guide-sublabel">AUTHOR</label>
+          <input className="eq-pub-guide-input" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Author name" maxLength={80} />
+        </div>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label className="eq-pub-guide-sublabel">SHORT DESCRIPTION</label>
+          <input className="eq-pub-guide-input" value={desc} onChange={e => setDesc(e.target.value)} placeholder="Brief summary shown on the card" maxLength={200} />
+        </div>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label className="eq-pub-guide-sublabel">HTML CONTENT *</label>
+          <textarea
+            className="eq-pub-guide-textarea"
+            value={htmlContent}
+            onChange={e => setHtmlContent(e.target.value)}
+            placeholder="Paste full HTML content here, or upload an .html file below..."
+            rows={8}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+            <label className="eq-pub-guide-file-btn">
+              📁 UPLOAD .HTML FILE
+              <input type="file" accept=".html,.htm" style={{ display: 'none' }} onChange={handleFileUpload} />
+            </label>
+            {htmlContent && <span className="eq-pub-guide-char">{htmlContent.length.toLocaleString()} chars loaded</span>}
+          </div>
+        </div>
+      </div>
+      <div className="eq-pub-guide-footer">
+        <button className="eq-pub-guide-submit" onClick={handleSubmit} disabled={saving || !title.trim() || !htmlContent.trim()}>
+          {saving ? 'PUBLISHING...' : '✦ PUBLISH GUIDE'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── GUIDES TAB (all models, DB-driven) ─── */
+function GuidesTab({ modelId, admin, showToast }) {
+  const [guides, setGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    setLoading(true);
+    supabase.from('model_guides')
+      .select('id, title, description, html_content, author_name, created_at, is_active')
+      .eq('model_id', modelId)
+      .order('created_at', { ascending: true })
+      .then(({ data, error }) => {
+        if (error) { showToast('Failed to load guides: ' + error.message, 'error'); }
+        setGuides(data || []);
+        setLoading(false);
+      });
+  }, [modelId, refreshKey]);
+
+  async function toggleActive(guide) {
+    const { error } = await supabase.from('model_guides').update({ is_active: !guide.is_active }).eq('id', guide.id);
+    if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    setGuides(prev => prev.map(g => g.id === guide.id ? { ...g, is_active: !g.is_active } : g));
+    showToast(guide.is_active ? 'Guide hidden' : 'Guide visible', 'success');
+  }
+
+  async function deleteGuide(guide) {
+    if (!window.confirm(`Delete guide "${guide.title}"? This cannot be undone.`)) return;
+    const { error } = await supabase.from('model_guides').delete().eq('id', guide.id);
+    if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    setGuides(prev => prev.filter(g => g.id !== guide.id));
+    showToast('Guide deleted', 'success');
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  const visibleGuides = admin ? guides : guides.filter(g => g.is_active);
+
+  return (
+    <div className="eq-guides-wrap">
+      {admin && (
+        <div className="eq-guide-admin-bar">
+          <button className="eq-guide-pub-toggle" onClick={() => setShowForm(v => !v)}>
+            {showForm ? '✕ CLOSE FORM' : '+ PUBLISH GUIDE'}
+          </button>
+          <span style={{ fontFamily: 'var(--eq-mono)', fontSize: 10, color: 'var(--eq-muted)' }}>
+            {guides.length} guide{guides.length !== 1 ? 's' : ''} total
+          </span>
+        </div>
+      )}
+      {showForm && (
+        <PublishGuideForm
+          modelId={modelId}
+          admin={admin}
+          showToast={showToast}
+          onPublished={() => { setRefreshKey(k => k + 1); setShowForm(false); }}
+        />
+      )}
+      <div className="eq-guides-list">
+        {loading && <div style={{ color: 'var(--eq-muted)', fontFamily: 'var(--eq-mono)', fontSize: 11, padding: 8 }}>LOADING GUIDES...</div>}
+        {!loading && visibleGuides.length === 0 && (
+          <div style={{ color: 'var(--eq-muted)', fontFamily: 'var(--eq-mono)', fontSize: 11, padding: 8 }}>
+            {admin ? 'No guides published yet. Use "+ PUBLISH GUIDE" above to add one.' : 'No guides available for this model yet.'}
+          </div>
+        )}
+        {visibleGuides.map((guide, idx) => (
+          <div key={guide.id} className={`eq-guide-card${!guide.is_active ? ' guide-hidden' : ''}`}>
+            <div className="eq-guide-card-icon">📄</div>
+            <div className="eq-guide-card-info">
+              <div className="eq-guide-card-title">
+                Guide {idx + 1}: {guide.title}
+                {!guide.is_active && <span className="eq-guide-hidden-badge">HIDDEN</span>}
+              </div>
+              {guide.description && <div className="eq-guide-card-desc">{guide.description}</div>}
+              <div className="eq-guide-card-meta">
+                <span className="eq-guide-card-author">by {guide.author_name || 'EternalQuants Team'}</span>
+                <span>·</span>
+                <span>{formatDate(guide.created_at)}</span>
+              </div>
+            </div>
+            <div className="eq-guide-card-actions">
+              <button
+                style={{ padding: '5px 14px', background: 'rgba(0,229,255,.08)', border: '1px solid rgba(0,229,255,.3)', color: 'var(--eq-cyan)', fontFamily: 'var(--eq-mono)', fontSize: 10, cursor: 'pointer', borderRadius: 2, letterSpacing: 1 }}
+                onClick={() => openGuideInNewWindow(guide.html_content, guide.title)}
+              >
+                ▶ OPEN
+              </button>
+              {admin && (
+                <>
+                  <button
+                    style={{ padding: '5px 10px', background: guide.is_active ? 'rgba(255,127,81,.08)' : 'rgba(0,255,140,.08)', border: `1px solid ${guide.is_active ? 'rgba(255,127,81,.3)' : 'rgba(0,255,140,.3)'}`, color: guide.is_active ? 'var(--eq-orange)' : 'var(--eq-green)', fontFamily: 'var(--eq-mono)', fontSize: 10, cursor: 'pointer', borderRadius: 2, letterSpacing: 1 }}
+                    onClick={() => toggleActive(guide)}
+                  >
+                    {guide.is_active ? '⊘ HIDE' : '◎ SHOW'}
+                  </button>
+                  <button
+                    style={{ padding: '5px 10px', background: 'rgba(255,77,109,.08)', border: '1px solid rgba(255,77,109,.3)', color: 'var(--eq-red)', fontFamily: 'var(--eq-mono)', fontSize: 10, cursor: 'pointer', borderRadius: 2, letterSpacing: 1 }}
+                    onClick={() => deleteGuide(guide)}
+                  >
+                    ✕ DEL
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1881,7 +2053,7 @@ function ModelDetail({ modelId, user, admin, showToast }) {
       <div className="eq-tab-bar">
         {[
           { id: 'details', label: 'DETAILS' },
-          ...(m.guide ? [{ id: 'guide', label: 'GUIDE' }] : []),
+          { id: 'guide', label: 'GUIDE' },
           { id: 'live', label: 'LIVE EXAMPLES', count: liveCount },
           { id: 'community', label: 'COMMUNITY', count: communityCount },
         ].map(tab => (
@@ -1944,11 +2116,9 @@ function ModelDetail({ modelId, user, admin, showToast }) {
       </div>
 
       {/* Guide pane */}
-      {m.guide && (
-        <div className={`eq-pane${activeTab === 'guide' ? ' active' : ''}`}>
-          <GuidePane sections={m.guide} />
-        </div>
-      )}
+      <div className={`eq-pane${activeTab === 'guide' ? ' active' : ''}`}>
+        <GuidesTab modelId={modelId} admin={admin} showToast={showToast} />
+      </div>
 
       {/* Live examples pane */}
       <div className={`eq-pane${activeTab === 'live' ? ' active' : ''}`}>
