@@ -59,10 +59,7 @@ const CSS = `
 }
 .eq-topbar-left { display:flex; align-items:center; gap:16px; }
 .eq-logo-mark {
-  width:32px; height:32px;
-  background:linear-gradient(135deg,var(--eq-green),var(--eq-cyan));
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
   animation:eqRotateGlow 6s ease-in-out infinite;
 }
 @keyframes eqRotateGlow {
@@ -70,11 +67,56 @@ const CSS = `
   50%{filter:drop-shadow(0 0 14px var(--eq-cyan))}
 }
 .eq-brand {
-  font-family:var(--eq-display); font-size:18px; font-weight:700; letter-spacing:2px;
+  font-family:var(--eq-display); font-size:17px; font-weight:700; letter-spacing:1px;
   background:linear-gradient(90deg,var(--eq-green),var(--eq-cyan));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap;
 }
-.eq-brand span { opacity:.5; font-weight:400; }
+/* Feedback button */
+.eq-feedback-btn {
+  font-family:var(--eq-mono); font-size:10px; letter-spacing:1px; white-space:nowrap;
+  color:var(--eq-cyan); cursor:pointer; padding:5px 14px; border-radius:2px;
+  border:1px solid rgba(0,229,255,.3); transition:.2s; background:rgba(0,229,255,.05);
+}
+.eq-feedback-btn:hover { background:rgba(0,229,255,.12); border-color:var(--eq-cyan); box-shadow:0 0 10px rgba(0,229,255,.15); }
+/* Feedback modal */
+.eq-fb-overlay {
+  position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.88); backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.eq-fb-box {
+  width:100%; max-width:500px; background:#060f09; border:1px solid rgba(0,229,255,.25);
+  border-radius:6px; overflow:hidden;
+}
+.eq-fb-top {
+  padding:16px 22px; border-bottom:1px solid rgba(0,229,255,.12);
+  background:linear-gradient(135deg,rgba(0,229,255,.05),transparent);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.eq-fb-title { font-family:var(--eq-display); font-size:12px; font-weight:700; letter-spacing:2px; color:var(--eq-cyan); }
+.eq-fb-close { width:26px; height:26px; border-radius:2px; display:flex; align-items:center; justify-content:center; border:1px solid var(--eq-border); color:var(--eq-muted); cursor:pointer; font-size:14px; transition:.15s; }
+.eq-fb-close:hover { border-color:var(--eq-red); color:var(--eq-red); }
+.eq-fb-body { padding:20px 22px; display:flex; flex-direction:column; gap:14px; }
+.eq-fb-label { font-family:var(--eq-mono); font-size:9px; letter-spacing:2px; color:var(--eq-muted); text-transform:uppercase; margin-bottom:5px; }
+.eq-fb-types { display:flex; gap:8px; flex-wrap:wrap; }
+.eq-fb-type {
+  font-family:var(--eq-mono); font-size:9px; letter-spacing:1px; padding:5px 12px;
+  border-radius:2px; cursor:pointer; border:1px solid var(--eq-border); color:var(--eq-muted);
+  background:transparent; transition:.15s;
+}
+.eq-fb-type.active { border-color:var(--eq-cyan); color:var(--eq-cyan); background:rgba(0,229,255,.08); }
+.eq-fb-textarea {
+  width:100%; height:130px; background:rgba(0,0,0,.3); border:1px solid var(--eq-border2);
+  border-radius:3px; padding:12px 14px; font-family:var(--eq-body); font-size:14px;
+  color:var(--eq-white); resize:none; outline:none; transition:.15s;
+}
+.eq-fb-textarea:focus { border-color:rgba(0,229,255,.4); }
+.eq-fb-textarea::placeholder { color:var(--eq-muted); }
+.eq-fb-footer { display:flex; justify-content:flex-end; gap:10px; padding-top:4px; }
+.eq-fb-cancel { padding:8px 18px; background:transparent; border:1px solid var(--eq-border); color:var(--eq-muted); font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; cursor:pointer; border-radius:2px; transition:.15s; }
+.eq-fb-cancel:hover { border-color:var(--eq-red); color:var(--eq-red); }
+.eq-fb-submit { padding:8px 22px; background:rgba(0,229,255,.1); border:1px solid var(--eq-cyan); color:var(--eq-cyan); font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; cursor:pointer; border-radius:2px; transition:.15s; }
+.eq-fb-submit:hover:not(:disabled) { background:rgba(0,229,255,.2); box-shadow:0 0 12px rgba(0,229,255,.15); }
+.eq-fb-submit:disabled { opacity:.35; cursor:not-allowed; }
 .eq-topbar-center {
   position:absolute; left:50%; transform:translateX(-50%);
   font-family:var(--eq-mono); font-size:11px; letter-spacing:4px;
@@ -704,6 +746,163 @@ function useToast() {
   return { toast, showToast };
 }
 
+/* ─── NOTEBOOK → NEW WINDOW ─── */
+function openNotebookInNewWindow(nb, filename) {
+  const cells = nb.cells || nb.worksheets?.[0]?.cells || [];
+  function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function inlineFmt(t) {
+    t = esc(t);
+    t = t.replace(/\*\*\*(.+?)\*\*\*/g,'<strong><em>$1</em></strong>');
+    t = t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    t = t.replace(/\*(.+?)\*/g,'<em>$1</em>');
+    t = t.replace(/__(.+?)__/g,'<strong>$1</strong>');
+    t = t.replace(/_([^_]+)_/g,'<em>$1</em>');
+    t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
+    t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>');
+    return t;
+  }
+  function mdToHtml(text) {
+    if (!text) return '';
+    const lines = text.split('\n');
+    const out = []; let inList=false, inCode=false, codeLang='', codeLines=[];
+    for (const line of lines) {
+      const fence = line.match(/^```(\w*)/);
+      if (fence || (line.startsWith('```') && inCode)) {
+        if (inCode) {
+          out.push(`<pre class="md-code"><code>${codeLines.join('\n').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`);
+          codeLines=[]; inCode=false;
+        } else { if(inList){out.push('</ul>');inList=false;} codeLang=fence?.[1]||''; inCode=true; }
+        continue;
+      }
+      if (inCode) { codeLines.push(line); continue; }
+      const isList = /^[-*+] /.test(line);
+      if (!isList && inList) { out.push('</ul>'); inList=false; }
+      const hm = line.match(/^(#{1,6}) (.+)/);
+      if (hm) { out.push(`<h${hm[1].length}>${inlineFmt(hm[2])}</h${hm[1].length}>`); }
+      else if (/^[-*]{3,}$/.test(line.trim())) { out.push('<hr>'); }
+      else if (isList) { if(!inList){out.push('<ul>');inList=true;} out.push('<li>'+inlineFmt(line.replace(/^[-*+] /,''))+'</li>'); }
+      else if (line.trim()==='') { if(inList){out.push('</ul>');inList=false;} out.push(''); }
+      else { out.push('<p>'+inlineFmt(line)+'</p>'); }
+    }
+    if (inList) out.push('</ul>');
+    if (inCode) out.push(`<pre class="md-code"><code>${codeLines.join('\n').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`);
+    return out.join('\n');
+  }
+  function renderOutputs(outputs) {
+    if (!outputs?.length) return '';
+    return outputs.map(o => {
+      if (o.output_type === 'display_data' || o.output_type === 'execute_result') {
+        if (o.data?.['image/png']) {
+          const b64 = Array.isArray(o.data['image/png']) ? o.data['image/png'].join('') : o.data['image/png'];
+          return `<div class="nb-out nb-img"><img src="data:image/png;base64,${b64}" alt="output"></div>`;
+        }
+        if (o.data?.['image/jpeg']) {
+          const b64 = Array.isArray(o.data['image/jpeg']) ? o.data['image/jpeg'].join('') : o.data['image/jpeg'];
+          return `<div class="nb-out nb-img"><img src="data:image/jpeg;base64,${b64}" alt="output"></div>`;
+        }
+        if (o.data?.['image/svg+xml']) {
+          const svg = Array.isArray(o.data['image/svg+xml']) ? o.data['image/svg+xml'].join('') : o.data['image/svg+xml'];
+          return `<div class="nb-out nb-img">${svg}</div>`;
+        }
+        if (o.data?.['text/html']) {
+          const h = Array.isArray(o.data['text/html']) ? o.data['text/html'].join('') : o.data['text/html'];
+          return `<div class="nb-out nb-html">${h}</div>`;
+        }
+        if (o.data?.['text/plain']) {
+          const t = Array.isArray(o.data['text/plain']) ? o.data['text/plain'].join('') : o.data['text/plain'];
+          return `<div class="nb-out nb-text"><pre>${esc(t)}</pre></div>`;
+        }
+      }
+      if (o.output_type === 'stream') {
+        const t = Array.isArray(o.text) ? o.text.join('') : (o.text||'');
+        return `<div class="nb-out ${o.name==='stderr'?'nb-stderr':'nb-stream'}"><pre>${esc(t)}</pre></div>`;
+      }
+      if (o.output_type === 'error') {
+        const tb = (o.traceback||[]).join('\n').replace(/\x1b\[[0-9;]*m/g,'');
+        return `<div class="nb-out nb-error"><pre>${esc(tb)}</pre></div>`;
+      }
+      return '';
+    }).join('');
+  }
+  let cellsHtml = '';
+  cells.forEach((cell, i) => {
+    const src = Array.isArray(cell.source) ? cell.source.join('') : (cell.source || '');
+    if (cell.cell_type === 'markdown') {
+      cellsHtml += `<div class="nb-cell nb-md"><div class="nb-md-body">${mdToHtml(src)}</div></div>`;
+    } else if (cell.cell_type === 'code') {
+      const ec = cell.execution_count != null ? cell.execution_count : i+1;
+      const outs = renderOutputs(cell.outputs);
+      cellsHtml += `<div class="nb-cell nb-code"><div class="nb-code-hdr"><span class="nb-in">In [${ec}]:</span></div><div class="nb-code-body"><pre><code>${esc(src)}</code></pre></div>${outs?`<div class="nb-outs">${outs}</div>`:''}</div>`;
+    } else if (cell.cell_type === 'raw') {
+      cellsHtml += `<div class="nb-cell nb-raw"><pre>${esc(src)}</pre></div>`;
+    }
+  });
+  const kernel = nb.metadata?.kernelspec?.display_name || nb.metadata?.language_info?.name || 'Python';
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(filename)} — EternalQuants</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#030a06;color:#e8f4ed;font-family:'Rajdhani',sans-serif;font-size:15px;line-height:1.65;}
+a{color:#00e5ff;}
+#nb-hdr{background:rgba(6,15,9,.97);border-bottom:1px solid rgba(0,255,140,.2);padding:13px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:16px;flex-wrap:wrap;}
+#nb-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,#00ff8c,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+#nb-fname{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(0,255,140,.75);letter-spacing:1px;}
+#nb-meta{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(232,244,237,.35);letter-spacing:1px;white-space:nowrap;}
+#nb-wrap{max-width:980px;margin:28px auto;padding:0 20px 80px;}
+.nb-cell{margin-bottom:14px;border-radius:5px;overflow:hidden;}
+.nb-md{background:rgba(255,255,255,.018);border:1px solid rgba(0,255,140,.07);padding:18px 24px;}
+.nb-md-body h1{font-family:'Orbitron',monospace;font-size:19px;color:#00ff8c;margin:10px 0 8px;letter-spacing:1px;}
+.nb-md-body h2{font-family:'Orbitron',monospace;font-size:16px;color:#00e5ff;margin:10px 0 7px;}
+.nb-md-body h3{font-size:15px;font-weight:600;color:#ffd166;margin:10px 0 6px;}
+.nb-md-body h4,.nb-md-body h5,.nb-md-body h6{font-size:14px;font-weight:600;color:rgba(232,244,237,.8);margin:8px 0 5px;}
+.nb-md-body p{margin-bottom:8px;color:rgba(232,244,237,.85);}
+.nb-md-body ul{margin:6px 0 8px 20px;}
+.nb-md-body li{margin-bottom:3px;color:rgba(232,244,237,.8);}
+.nb-md-body strong{color:#fff;font-weight:600;}
+.nb-md-body em{color:#ffd166;font-style:italic;}
+.nb-md-body code{background:rgba(0,255,140,.1);color:#00ff8c;padding:1px 5px;border-radius:3px;font-family:'Share Tech Mono',monospace;font-size:12px;}
+.nb-md-body pre.md-code{background:rgba(0,0,0,.4);border:1px solid rgba(0,255,140,.1);padding:14px;border-radius:4px;overflow-x:auto;margin:10px 0;}
+.nb-md-body pre.md-code code{background:none;color:#e8f4ed;padding:0;font-size:13px;line-height:1.6;}
+.nb-md-body hr{border:none;border-top:1px solid rgba(0,255,140,.15);margin:14px 0;}
+.nb-md-body a{color:#00e5ff;}
+.nb-md-body table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13px;}
+.nb-md-body th{background:rgba(0,255,140,.06);color:#00ff8c;padding:8px 12px;text-align:left;border-bottom:1px solid rgba(0,255,140,.15);}
+.nb-md-body td{padding:7px 12px;border-bottom:1px solid rgba(0,255,140,.05);color:rgba(232,244,237,.75);}
+.nb-code{background:rgba(0,0,0,.28);border:1px solid rgba(0,255,140,.1);}
+.nb-code-hdr{display:flex;align-items:center;padding:7px 16px;background:rgba(0,255,140,.04);border-bottom:1px solid rgba(0,255,140,.08);}
+.nb-in{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(0,255,140,.6);letter-spacing:1px;}
+.nb-code-body{padding:14px 18px;}
+.nb-code-body pre{font-family:'Share Tech Mono',monospace;font-size:13px;color:#e8f4ed;white-space:pre;overflow-x:auto;line-height:1.6;}
+.nb-code-body code{font-family:inherit;font-size:inherit;}
+.nb-outs{}
+.nb-out{padding:10px 18px;border-top:1px solid rgba(0,255,140,.06);}
+.nb-img{text-align:center;background:rgba(0,0,0,.15);padding:16px;}
+.nb-img img{max-width:100%;height:auto;border-radius:4px;}
+.nb-img svg{max-width:100%;height:auto;}
+.nb-text pre,.nb-stream pre{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(232,244,237,.7);white-space:pre-wrap;word-break:break-word;line-height:1.5;}
+.nb-stderr pre{color:#ff7f51;}
+.nb-error pre{color:#ff4d6d;font-family:'Share Tech Mono',monospace;font-size:11px;white-space:pre-wrap;word-break:break-word;}
+.nb-html{overflow-x:auto;color:rgba(232,244,237,.85);font-size:13px;}
+.nb-html table{border-collapse:collapse;font-size:12px;width:100%;}
+.nb-html th{background:rgba(0,255,140,.06);color:#00ff8c;padding:6px 10px;border:1px solid rgba(0,255,140,.12);}
+.nb-html td{padding:5px 10px;border:1px solid rgba(0,255,140,.05);color:rgba(232,244,237,.75);}
+.nb-raw{background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.05);padding:14px 18px;}
+.nb-raw pre{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(232,244,237,.5);white-space:pre-wrap;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:rgba(0,255,140,.2);border-radius:4px;}
+</style></head><body>
+<div id="nb-hdr">
+  <div id="nb-logo">⊙ EternalQuants</div>
+  <div id="nb-fname">📓 ${esc(filename)}</div>
+  <div id="nb-meta">KERNEL: ${esc(kernel)} &nbsp;·&nbsp; ${cells.length} CELLS &nbsp;·&nbsp; VIEW ONLY</div>
+</div>
+<div id="nb-wrap">${cellsHtml}</div>
+</body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
 /* ─── FILE VIEWER MODAL ─── */
 function FileViewer({ file, onClose }) {
   const [content, setContent] = useState(null);
@@ -821,6 +1020,83 @@ function FileViewer({ file, onClose }) {
   );
 }
 
+/* ─── FEEDBACK MODAL ─── */
+// SQL to create feedback table (run once in Supabase SQL Editor):
+// create table feedback (id uuid primary key default gen_random_uuid(), user_id uuid references auth.users(id), user_email text, user_name text, type text default 'feedback', message text not null, created_at timestamptz default now());
+// alter table feedback enable row level security;
+// create policy "Users can submit" on feedback for insert to authenticated with check (true);
+// create policy "Admin can read" on feedback for select to authenticated using (auth.email() = 'amitjoh@gmail.com');
+const FB_TYPES = ['Feedback', 'Suggestion', 'Bug Report', 'Question', 'Other'];
+function FeedbackModal({ user, onClose, showToast }) {
+  const [type, setType] = useState('Feedback');
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function handleSubmit() {
+    if (!message.trim()) return;
+    setSubmitting(true);
+    const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Anonymous';
+    const { error } = await supabase.from('feedback').insert({
+      user_id: user?.id,
+      user_email: user?.email,
+      user_name: userName,
+      type: type.toLowerCase().replace(' ', '_'),
+      message: message.trim(),
+    });
+    setSubmitting(false);
+    if (error) { showToast('Could not submit — ' + error.message, 'error'); return; }
+    setDone(true);
+    setTimeout(onClose, 2200);
+  }
+
+  return (
+    <div className="eq-fb-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="eq-fb-box">
+        <div className="eq-fb-top">
+          <div className="eq-fb-title">✦ TALK TO ETERNALQUANTS TEAM</div>
+          <div className="eq-fb-close" onClick={onClose}>✕</div>
+        </div>
+        <div className="eq-fb-body">
+          {done ? (
+            <div style={{ textAlign:'center', padding:'28px 0' }}>
+              <div style={{ fontSize:32, marginBottom:10 }}>✦</div>
+              <div style={{ fontFamily:'var(--eq-display)', fontSize:13, color:'var(--eq-green)', letterSpacing:2 }}>MESSAGE SENT</div>
+              <div style={{ fontFamily:'var(--eq-mono)', fontSize:10, color:'var(--eq-muted)', marginTop:8, letterSpacing:1 }}>Thank you — we'll review it shortly.</div>
+            </div>
+          ) : (
+            <>
+              <div>
+                <div className="eq-fb-label">Type</div>
+                <div className="eq-fb-types">
+                  {FB_TYPES.map(t => (
+                    <button key={t} className={`eq-fb-type${type===t?' active':''}`} onClick={() => setType(t)}>{t.toUpperCase()}</button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="eq-fb-label">Your Message</div>
+                <textarea
+                  className="eq-fb-textarea"
+                  placeholder="Share your thoughts, ideas, or issues..."
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                />
+              </div>
+              <div className="eq-fb-footer">
+                <button className="eq-fb-cancel" onClick={onClose}>CANCEL</button>
+                <button className="eq-fb-submit" disabled={!message.trim() || submitting} onClick={handleSubmit}>
+                  {submitting ? 'SENDING...' : 'SEND →'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── FILE CARD ─── */
 function FileCard({ file, showUser, onDownload, onView, onDelete, admin }) {
   return (
@@ -878,6 +1154,19 @@ function FilesTab({ modelId, bucket, showUser, admin, refresh, showToast }) {
     showToast(`↓ Downloading "${file.name}"`);
   }
 
+  async function handleView(file) {
+    if (!file.name.endsWith('.ipynb')) { setViewer(file); return; }
+    // Notebooks open as full HTML in a new tab
+    const { data, error } = await supabase.storage.from(file.bucket || 'community-files').download(file.storage_path || file.storagePath);
+    if (error) { showToast('Could not load notebook: ' + error.message, 'error'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      try { openNotebookInNewWindow(JSON.parse(e.target.result), file.name); }
+      catch (err) { showToast('Failed to parse notebook: ' + err.message, 'error'); }
+    };
+    reader.readAsText(data);
+  }
+
   async function handleDelete(file) {
     if (!window.confirm(`Delete "${file.name}"?`)) return;
     const { error: storErr } = await supabase.storage.from(file.bucket).remove([file.storage_path]);
@@ -901,7 +1190,7 @@ function FilesTab({ modelId, bucket, showUser, admin, refresh, showToast }) {
       <div className="eq-files-grid">
         {files.map(f => (
           <FileCard key={f.id} file={f} showUser={showUser} admin={admin}
-            onDownload={handleDownload} onView={setViewer} onDelete={handleDelete} />
+            onDownload={handleDownload} onView={handleView} onDelete={handleDelete} />
         ))}
       </div>
       {viewer && <FileViewer file={viewer} onClose={() => setViewer(null)} />}
@@ -1203,6 +1492,7 @@ export default function ContentPage() {
   const [openCats, setOpenCats] = useState(new Set(CATEGORIES.map(c => c.id)));
   const [selectedModel, setSelectedModel] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const { toast, showToast } = useToast();
 
   const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'USER';
@@ -1266,14 +1556,39 @@ export default function ContentPage() {
         {/* TOPBAR */}
         <header className="eq-topbar">
           <div className="eq-topbar-left">
-            <div className="eq-logo-mark" />
-            <div className="eq-brand">ETERNAL<span>QUANTS</span></div>
+            <div className="eq-logo-mark">
+              <svg viewBox="0 0 38 38" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#00ff8c"/>
+                    <stop offset="100%" stopColor="#00e5ff"/>
+                  </linearGradient>
+                </defs>
+                {/* Outer ring */}
+                <circle cx="19" cy="19" r="16" fill="none" stroke="url(#cg)" strokeWidth="1.6"/>
+                {/* Inner ring */}
+                <circle cx="19" cy="19" r="5" fill="none" stroke="url(#cg)" strokeWidth="1.4"/>
+                {/* Center dot */}
+                <circle cx="19" cy="19" r="2" fill="url(#cg)"/>
+                {/* 8 spokes: outer ends at r=14.5, inner ends at r=5.8 */}
+                <line x1="19" y1="3" x2="19" y2="13.2" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="29.25" y1="8.75" x2="23.1" y2="14.9" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="35" y1="19" x2="24.8" y2="19" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="29.25" y1="29.25" x2="23.1" y2="23.1" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="19" y1="35" x2="19" y2="24.8" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="8.75" y1="29.25" x2="14.9" y2="23.1" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="3" y1="19" x2="13.2" y2="19" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="8.75" y1="8.75" x2="14.9" y2="14.9" stroke="url(#cg)" strokeWidth="1.4" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className="eq-brand">EternalQuants</div>
           </div>
           <div className="eq-topbar-center">// Quantitative Research Terminal</div>
           <div className="eq-topbar-right">
             {['MODELS', 'BACKTESTER', 'REPORTS', 'SIGNALS'].map(pill => (
               <div key={pill} className={`eq-nav-pill${pill === 'MODELS' ? ' active' : ''}`}>{pill}</div>
             ))}
+            <button className="eq-feedback-btn" onClick={() => setShowFeedback(true)}>✦ TALK TO US</button>
             <div className="eq-user-chip" onClick={e => { e.stopPropagation(); setShowUserMenu(v => !v); }}>
               <div className="eq-avatar">{userInitial}</div>
               <span className="eq-user-name">{userName.toUpperCase()}</span>
@@ -1367,6 +1682,15 @@ export default function ContentPage() {
         <div className="eq-toast-dot" />
         <span>{toast.msg}</span>
       </div>
+
+      {/* FEEDBACK MODAL */}
+      {showFeedback && (
+        <FeedbackModal
+          user={user}
+          onClose={() => setShowFeedback(false)}
+          showToast={showToast}
+        />
+      )}
     </>
   );
 }
