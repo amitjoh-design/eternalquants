@@ -27,6 +27,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_CLAUDE_KEY: ${{ secrets.VITE_CLAUDE_KEY }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
