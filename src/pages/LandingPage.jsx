@@ -85,7 +85,7 @@ export default function LandingPage() {
     if (!svg) return;
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    const realSeries = genSeries(90, 200, 7, 0.15);
+    const realSeries = genSeries(90, 22500, 120, 3);
 
     const predictedTest = realSeries.slice(TRAIN_END).map((v, i) => {
       const noise = (Math.random() - 0.5) * 8;
@@ -118,22 +118,22 @@ export default function LandingPage() {
       g.appendChild(ns('stop', { offset: '100%', 'stop-color': col, 'stop-opacity': o2 }));
       defs.appendChild(g);
     }
-    mkGrad('gTrain', '#00ffb4', '.2', '0');
-    mkGrad('gPred', '#ffd700', '.18', '0');
-    mkGrad('gFore', '#ff6b35', '.2', '0');
+    mkGrad('gTrain', '#7a8fa8', '.12', '0');
+    mkGrad('gPred', '#4d9de0', '.18', '0');
+    mkGrad('gFore', '#ff4d6d', '.2', '0');
     svg.appendChild(defs);
 
     /* zone backgrounds */
     function zoneRect(x1, x2, col) {
       svg.appendChild(ns('rect', { x: sx(x1), y: PAD.t, width: sx(x2) - sx(x1), height: CH, fill: col, 'clip-path': 'url(#cc)' }));
     }
-    zoneRect(0, TRAIN_END - 1, 'rgba(0,255,180,.025)');
-    zoneRect(TRAIN_END, TEST_END - 1, 'rgba(255,215,0,.018)');
-    zoneRect(TEST_END, TOTAL_X - 1, 'rgba(255,107,53,.022)');
+    zoneRect(0, TRAIN_END - 1, 'rgba(122,143,168,.025)');
+    zoneRect(TRAIN_END, TEST_END - 1, 'rgba(0,255,140,.018)');
+    zoneRect(TEST_END, TOTAL_X - 1, 'rgba(255,77,109,.022)');
 
     /* chart title */
-    const chartTitle = ns('text', { x: PAD.l + CW / 2, y: PAD.t - 14, 'text-anchor': 'middle', fill: 'rgba(0,255,180,.55)', 'font-size': '12', 'font-family': 'Share Tech Mono', 'letter-spacing': '3' });
-    chartTitle.textContent = 'ARIMA FORECAST · NIFTY 50 LOG RETURNS'; svg.appendChild(chartTitle);
+    const chartTitle = ns('text', { x: PAD.l + CW / 2, y: PAD.t - 14, 'text-anchor': 'middle', fill: 'rgba(200,220,255,.6)', 'font-size': '12', 'font-family': 'Share Tech Mono', 'letter-spacing': '3' });
+    chartTitle.textContent = 'NIFTY 50 PRICE LEVEL · ARIMA FORECAST'; svg.appendChild(chartTitle);
 
     /* grid */
     for (let i = 0; i <= 5; i++) {
@@ -149,7 +149,7 @@ export default function LandingPage() {
     const xlbl = ns('text', { x: PAD.l + CW / 2, y: H - 6, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.3)', 'font-size': '11', 'font-family': 'Share Tech Mono' });
     xlbl.textContent = 'TIME (TRADING SESSIONS)'; svg.appendChild(xlbl);
     const ylbl = ns('text', { x: 13, y: PAD.t + CH / 2, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.3)', 'font-size': '11', 'font-family': 'Share Tech Mono', transform: `rotate(-90,13,${PAD.t + CH / 2})` });
-    ylbl.textContent = 'LOG(CLOSE)'; svg.appendChild(ylbl);
+    ylbl.textContent = 'PRICE LEVEL'; svg.appendChild(ylbl);
 
     /* dividers */
     function divLine(xi, col, label, side = 'right') {
@@ -158,8 +158,8 @@ export default function LandingPage() {
       const t = ns('text', { x: side === 'right' ? x + 4 : x - 4, y: PAD.t + 24, 'text-anchor': side === 'right' ? 'start' : 'end', fill: col, 'font-size': '11', 'font-family': 'Share Tech Mono' });
       t.textContent = label; svg.appendChild(t);
     }
-    divLine(TRAIN_END, 'rgba(200,220,255,.4)', '▶ TEST');
-    divLine(TEST_END, 'rgba(255,107,53,.6)', '▶ FORECAST');
+    divLine(TRAIN_END, 'rgba(0,255,140,.45)', '▶ HOLD-OUT');
+    divLine(TEST_END, 'rgba(255,77,109,.65)', '▶ FORECAST');
 
     /* zone header labels */
     function zoneLabel(x1i, x2i, txt, col) {
@@ -168,23 +168,23 @@ export default function LandingPage() {
       const t = ns('text', { x: xm, y: PAD.t + 16, 'text-anchor': 'middle', fill: col, 'font-size': '11', 'font-family': 'Share Tech Mono', 'letter-spacing': '1' });
       t.textContent = txt; svg.appendChild(t);
     }
-    zoneLabel(0, TRAIN_END - 1, 'TRAIN', '#00ffb4');
-    zoneLabel(TRAIN_END, TEST_END - 1, 'TEST', '#c8dcff');
-    zoneLabel(TEST_END, TOTAL_X - 1, 'FORECAST', '#ff6b35');
+    zoneLabel(0, TRAIN_END - 1, 'TRAINING', '#8a9bb0');
+    zoneLabel(TRAIN_END, TEST_END - 1, 'HOLD-OUT', '#00ff8c');
+    zoneLabel(TEST_END, TOTAL_X - 1, 'FORECAST', '#ff4d6d');
 
     /* animated paths */
     const trainArea = ns('path', { 'clip-path': 'url(#cc)', fill: 'url(#gTrain)', stroke: 'none' }); svg.appendChild(trainArea);
-    const predConfEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'rgba(255,215,0,.08)', stroke: 'none' }); svg.appendChild(predConfEl);
-    const foreConfEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'rgba(255,107,53,.09)', stroke: 'none' }); svg.appendChild(foreConfEl);
+    const predConfEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'rgba(77,157,224,.12)', stroke: 'none' }); svg.appendChild(predConfEl);
+    const foreConfEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'rgba(255,77,109,.09)', stroke: 'none' }); svg.appendChild(foreConfEl);
     const predAreaEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'url(#gPred)', stroke: 'none' }); svg.appendChild(predAreaEl);
     const foreAreaEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'url(#gFore)', stroke: 'none' }); svg.appendChild(foreAreaEl);
 
-    const trainLine = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#00ffb4', 'stroke-width': '2.3', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); svg.appendChild(trainLine);
-    const testActLine = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(200,220,255,.9)', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); svg.appendChild(testActLine);
-    const predLineEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#ffd700', 'stroke-width': '2.2', 'stroke-linecap': 'round' }); svg.appendChild(predLineEl);
-    const foreLineEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#ff6b35', 'stroke-width': '2', 'stroke-dasharray': '7 4', 'stroke-linecap': 'round' }); svg.appendChild(foreLineEl);
-    const foreUpper = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(255,107,53,.35)', 'stroke-width': '.9', 'stroke-dasharray': '3 4' }); svg.appendChild(foreUpper);
-    const foreLower = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(255,107,53,.35)', 'stroke-width': '.9', 'stroke-dasharray': '3 4' }); svg.appendChild(foreLower);
+    const trainLine = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#8a9bb0', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); svg.appendChild(trainLine);
+    const testActLine = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#00ff8c', 'stroke-width': '2.4', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }); svg.appendChild(testActLine);
+    const predLineEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#4d9de0', 'stroke-width': '2.2', 'stroke-dasharray': '8 4', 'stroke-linecap': 'round' }); svg.appendChild(predLineEl);
+    const foreLineEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: '#ff4d6d', 'stroke-width': '2.2', 'stroke-dasharray': '7 4', 'stroke-linecap': 'round' }); svg.appendChild(foreLineEl);
+    const foreUpper = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(77,157,224,.45)', 'stroke-width': '.9', 'stroke-dasharray': '3 4' }); svg.appendChild(foreUpper);
+    const foreLower = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(77,157,224,.45)', 'stroke-width': '.9', 'stroke-dasharray': '3 4' }); svg.appendChild(foreLower);
 
     /* MA10 on train */
     const ma10pts = realSeries.slice(0, TRAIN_END)
@@ -196,8 +196,8 @@ export default function LandingPage() {
     maLbl.textContent = 'MA10'; svg.appendChild(maLbl);
 
     /* live dot + ring */
-    const liveDot = ns('circle', { r: '5', fill: '#ff6b35', stroke: '#000', 'stroke-width': '1.5', filter: 'drop-shadow(0 0 5px #ff6b35)' }); svg.appendChild(liveDot);
-    const liveRing = ns('circle', { r: '5', fill: 'none', stroke: '#ff6b35', 'stroke-width': '1.2' }); svg.appendChild(liveRing);
+    const liveDot = ns('circle', { r: '5', fill: '#ff4d6d', stroke: '#000', 'stroke-width': '1.5', filter: 'drop-shadow(0 0 5px #ff4d6d)' }); svg.appendChild(liveDot);
+    const liveRing = ns('circle', { r: '5', fill: 'none', stroke: '#ff4d6d', 'stroke-width': '1.2' }); svg.appendChild(liveRing);
 
     function buildPath(data, offset) { return data.map((v, i) => `${i === 0 ? 'M' : 'L'}${sx(offset + i)},${sy(v)}`).join(' '); }
     function buildArea(data, offset) { if (data.length < 2) return ''; const p = buildPath(data, offset); return p + `L${sx(offset + data.length - 1)},${PAD.t + CH} L${sx(offset)},${PAD.t + CH}Z`; }
@@ -306,19 +306,19 @@ export default function LandingPage() {
     legendRow: { position: 'absolute', top: -28, left: 50, display: 'flex', gap: 12, zIndex: 10 },
     leg: (type) => {
       const colors = {
-        train:  { color: '#00ffb4', background: 'rgba(0,255,180,.07)', border: '1px solid rgba(0,255,180,.2)' },
-        actual: { color: '#c8dcff', background: 'rgba(200,220,255,.06)', border: '1px solid rgba(200,220,255,.15)' },
-        pred:   { color: '#ffd700', background: 'rgba(255,215,0,.07)', border: '1px solid rgba(255,215,0,.25)' },
-        fore:   { color: '#ff6b35', background: 'rgba(255,107,53,.07)', border: '1px solid rgba(255,107,53,.25)' },
+        train:  { color: '#8a9bb0', background: 'rgba(138,155,176,.07)', border: '1px solid rgba(138,155,176,.2)' },
+        actual: { color: '#00ff8c', background: 'rgba(0,255,140,.06)', border: '1px solid rgba(0,255,140,.2)' },
+        pred:   { color: '#4d9de0', background: 'rgba(77,157,224,.07)', border: '1px solid rgba(77,157,224,.25)' },
+        fore:   { color: '#ff4d6d', background: 'rgba(255,77,109,.07)', border: '1px solid rgba(255,77,109,.25)' },
       };
       return { display: 'flex', alignItems: 'center', gap: 6, fontFamily: "'Share Tech Mono',monospace", fontSize: 12, letterSpacing: 1, padding: '4px 12px', borderRadius: 2, backdropFilter: 'blur(4px)', ...colors[type] };
     },
     dot: (col) => ({ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: col }),
     pill: (type) => {
       const variants = {
-        p1: { top: -6, right: -10, color: '#ffd700', borderColor: 'rgba(255,215,0,.3)', animationDelay: '0s' },
-        p2: { bottom: 60, left: -14, color: '#ff6b35', borderColor: 'rgba(255,107,53,.3)', animationDelay: '1.2s' },
-        p3: { bottom: -12, right: 20, color: '#00ffb4', borderColor: 'rgba(0,255,180,.25)', animationDelay: '2.1s' },
+        p1: { top: -6, right: -10, color: '#4d9de0', borderColor: 'rgba(77,157,224,.3)', animationDelay: '0s' },
+        p2: { bottom: 60, left: -14, color: '#8a9bb0', borderColor: 'rgba(138,155,176,.3)', animationDelay: '1.2s' },
+        p3: { bottom: -12, right: 20, color: '#ff4d6d', borderColor: 'rgba(255,77,109,.25)', animationDelay: '2.1s' },
       };
       return { position: 'absolute', background: 'rgba(0,10,5,.8)', border: '1px solid', padding: '6px 14px', fontFamily: "'Share Tech Mono',monospace", fontSize: 12, borderRadius: 2, whiteSpace: 'nowrap', animation: 'pillBlink 3s ease-in-out infinite', backdropFilter: 'blur(6px)', zIndex: 10, ...variants[type] };
     },
@@ -329,10 +329,10 @@ export default function LandingPage() {
     pipeline: { display: 'flex', alignItems: 'center', marginTop: 26, animation: 'fadeUp 1s ease .75s both' },
     pipeStep: (type) => {
       const variants = {
-        train: { color: '#00ffb4', borderColor: 'rgba(0,255,180,.4)', background: 'rgba(0,255,180,.06)' },
-        test:  { color: '#c8dcff', borderColor: 'rgba(200,220,255,.2)', background: 'rgba(200,220,255,.04)' },
-        pred:  { color: '#ffd700', borderColor: 'rgba(255,215,0,.35)', background: 'rgba(255,215,0,.06)' },
-        fore:  { color: '#ff6b35', borderColor: 'rgba(255,107,53,.4)', background: 'rgba(255,107,53,.06)' },
+        train: { color: '#8a9bb0', borderColor: 'rgba(138,155,176,.4)', background: 'rgba(138,155,176,.06)' },
+        test:  { color: '#00ff8c', borderColor: 'rgba(0,255,140,.3)', background: 'rgba(0,255,140,.05)' },
+        pred:  { color: '#4d9de0', borderColor: 'rgba(77,157,224,.35)', background: 'rgba(77,157,224,.06)' },
+        fore:  { color: '#ff4d6d', borderColor: 'rgba(255,77,109,.4)', background: 'rgba(255,77,109,.06)' },
       };
       return { padding: '9px 14px', fontFamily: "'Share Tech Mono',monospace", fontSize: 11, letterSpacing: '1.5px', textAlign: 'center', border: '1px solid', lineHeight: 1.7, ...variants[type] };
     },
@@ -377,13 +377,13 @@ export default function LandingPage() {
           {/* LEFT: Chart */}
           <div style={S.chartPanel}>
             <div style={S.legendRow}>
-              <div style={S.leg('train')}>  <div style={S.dot('#00ffb4')} /> TRAIN </div>
-              <div style={S.leg('actual')}> <div style={S.dot('#c8dcff')} /> TEST ACTUAL </div>
-              <div style={S.leg('pred')}>   <div style={S.dot('#ffd700')} /> PREDICTED </div>
-              <div style={S.leg('fore')}>   <div style={S.dot('#ff6b35')} /> FUTURE FORECAST </div>
+              <div style={S.leg('train')}>  <div style={S.dot('#8a9bb0')} /> TRAINING </div>
+              <div style={S.leg('actual')}> <div style={S.dot('#00ff8c')} /> ACTUAL CLOSE </div>
+              <div style={S.leg('pred')}>   <div style={S.dot('#4d9de0')} /> RECONSTRUCTED </div>
+              <div style={S.leg('fore')}>   <div style={S.dot('#ff4d6d')} /> FWD FORECAST </div>
             </div>
-            <div style={S.pill('p1')}>RMSE: 3.42 · MAE: 2.18 · R²: 0.94</div>
-            <div style={S.pill('p2')}>ARIMA(2,1,2) · AIC: 1842.3</div>
+            <div style={S.pill('p1')}>RMSE: 138 · MAE: 97 · R²: 0.96</div>
+            <div style={S.pill('p2')}>ARIMA(2,1,2) · AIC: 2847.4</div>
             <div style={S.pill('p3')}>95% CI · HORIZON: +20 SESSIONS</div>
             <svg ref={svgRef} viewBox="0 0 600 460" style={{ width: '100%', height: '100%', overflow: 'visible' }} />
           </div>
@@ -403,11 +403,11 @@ export default function LandingPage() {
             <div style={S.pipeline}>
               <div style={S.pipeStep('train')}>TRAIN<br />DATA</div>
               <div style={S.pipeArrow}>›</div>
-              <div style={S.pipeStep('test')}>TEST<br />ACTUAL</div>
+              <div style={S.pipeStep('test')}>HOLD-OUT<br />ACTUAL</div>
               <div style={S.pipeArrow}>›</div>
-              <div style={S.pipeStep('pred')}>MODEL<br />PREDICT</div>
+              <div style={S.pipeStep('pred')}>RECON-<br />STRUCT</div>
               <div style={S.pipeArrow}>›</div>
-              <div style={S.pipeStep('fore')}>FUTURE<br />FORECAST</div>
+              <div style={S.pipeStep('fore')}>FORWARD<br />FORECAST</div>
             </div>
             <div style={S.badgeRow}>
               <div className="badge-sweep" style={S.badge}>NIFTY 50</div>
