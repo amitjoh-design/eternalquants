@@ -131,27 +131,31 @@ export default function LandingPage() {
     zoneRect(TRAIN_END, TEST_END - 1, 'rgba(255,215,0,.018)');
     zoneRect(TEST_END, TOTAL_X - 1, 'rgba(255,107,53,.022)');
 
+    /* chart title */
+    const chartTitle = ns('text', { x: PAD.l + CW / 2, y: PAD.t - 14, 'text-anchor': 'middle', fill: 'rgba(0,255,180,.55)', 'font-size': '12', 'font-family': 'Share Tech Mono', 'letter-spacing': '3' });
+    chartTitle.textContent = 'ARIMA FORECAST · NIFTY 50 LOG RETURNS'; svg.appendChild(chartTitle);
+
     /* grid */
     for (let i = 0; i <= 5; i++) {
       const y = PAD.t + (i / 5) * CH;
       svg.appendChild(ns('line', { x1: PAD.l, y1: y, x2: PAD.l + CW, y2: y, stroke: 'rgba(0,255,180,.09)', 'stroke-width': '1' }));
-      const lbl = ns('text', { x: PAD.l - 7, y: y + 4, 'text-anchor': 'end', fill: 'rgba(255,255,255,.3)', 'font-size': '10', 'font-family': 'Share Tech Mono' });
+      const lbl = ns('text', { x: PAD.l - 7, y: y + 4, 'text-anchor': 'end', fill: 'rgba(255,255,255,.35)', 'font-size': '11', 'font-family': 'Share Tech Mono' });
       lbl.textContent = Math.round(mx - (i / 5) * (mx - mn)); svg.appendChild(lbl);
     }
     for (let i = 0; i <= 5; i++)
       svg.appendChild(ns('line', { x1: PAD.l + (i / 5) * CW, y1: PAD.t, x2: PAD.l + (i / 5) * CW, y2: PAD.t + CH, stroke: 'rgba(0,255,180,.05)', 'stroke-width': '1' }));
 
     /* axis labels */
-    const xlbl = ns('text', { x: PAD.l + CW / 2, y: H - 8, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.25)', 'font-size': '10', 'font-family': 'Share Tech Mono' });
-    xlbl.textContent = 'TIME (SESSIONS)'; svg.appendChild(xlbl);
-    const ylbl = ns('text', { x: 13, y: PAD.t + CH / 2, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.25)', 'font-size': '10', 'font-family': 'Share Tech Mono', transform: `rotate(-90,13,${PAD.t + CH / 2})` });
-    ylbl.textContent = 'PRICE'; svg.appendChild(ylbl);
+    const xlbl = ns('text', { x: PAD.l + CW / 2, y: H - 6, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.3)', 'font-size': '11', 'font-family': 'Share Tech Mono' });
+    xlbl.textContent = 'TIME (TRADING SESSIONS)'; svg.appendChild(xlbl);
+    const ylbl = ns('text', { x: 13, y: PAD.t + CH / 2, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.3)', 'font-size': '11', 'font-family': 'Share Tech Mono', transform: `rotate(-90,13,${PAD.t + CH / 2})` });
+    ylbl.textContent = 'LOG(CLOSE)'; svg.appendChild(ylbl);
 
     /* dividers */
     function divLine(xi, col, label, side = 'right') {
       const x = sx(xi);
       svg.appendChild(ns('line', { x1: x, y1: PAD.t, x2: x, y2: PAD.t + CH, stroke: col, 'stroke-width': '1.5', 'stroke-dasharray': '5 4', 'clip-path': 'url(#cc)' }));
-      const t = ns('text', { x: side === 'right' ? x + 4 : x - 4, y: PAD.t + 24, 'text-anchor': side === 'right' ? 'start' : 'end', fill: col, 'font-size': '9', 'font-family': 'Share Tech Mono' });
+      const t = ns('text', { x: side === 'right' ? x + 4 : x - 4, y: PAD.t + 24, 'text-anchor': side === 'right' ? 'start' : 'end', fill: col, 'font-size': '11', 'font-family': 'Share Tech Mono' });
       t.textContent = label; svg.appendChild(t);
     }
     divLine(TRAIN_END, 'rgba(200,220,255,.4)', '▶ TEST');
@@ -160,8 +164,8 @@ export default function LandingPage() {
     /* zone header labels */
     function zoneLabel(x1i, x2i, txt, col) {
       const xm = (sx(x1i) + sx(x2i)) / 2;
-      svg.appendChild(ns('rect', { x: xm - 30, y: PAD.t + 5, width: 60, height: 15, rx: '2', fill: col, 'fill-opacity': '.1' }));
-      const t = ns('text', { x: xm, y: PAD.t + 15, 'text-anchor': 'middle', fill: col, 'font-size': '9', 'font-family': 'Share Tech Mono', 'letter-spacing': '1' });
+      svg.appendChild(ns('rect', { x: xm - 36, y: PAD.t + 4, width: 72, height: 17, rx: '2', fill: col, 'fill-opacity': '.1' }));
+      const t = ns('text', { x: xm, y: PAD.t + 16, 'text-anchor': 'middle', fill: col, 'font-size': '11', 'font-family': 'Share Tech Mono', 'letter-spacing': '1' });
       t.textContent = txt; svg.appendChild(t);
     }
     zoneLabel(0, TRAIN_END - 1, 'TRAIN', '#00ffb4');
@@ -188,7 +192,7 @@ export default function LandingPage() {
       .filter(Boolean);
     const maEl = ns('path', { 'clip-path': 'url(#cc)', fill: 'none', stroke: 'rgba(0,212,255,.55)', 'stroke-width': '1.2', d: ma10pts.map(({ i, v }, k) => `${k === 0 ? 'M' : 'L'}${sx(i)},${sy(v)}`).join(' ') });
     svg.appendChild(maEl);
-    const maLbl = ns('text', { x: sx(TRAIN_END - 1) - 5, y: sy(ma10pts[ma10pts.length - 1].v) - 7, 'text-anchor': 'end', fill: 'rgba(0,212,255,.6)', 'font-size': '8', 'font-family': 'Share Tech Mono' });
+    const maLbl = ns('text', { x: sx(TRAIN_END - 1) - 5, y: sy(ma10pts[ma10pts.length - 1].v) - 7, 'text-anchor': 'end', fill: 'rgba(0,212,255,.65)', 'font-size': '11', 'font-family': 'Share Tech Mono' });
     maLbl.textContent = 'MA10'; svg.appendChild(maLbl);
 
     /* live dot + ring */
@@ -307,7 +311,7 @@ export default function LandingPage() {
         pred:   { color: '#ffd700', background: 'rgba(255,215,0,.07)', border: '1px solid rgba(255,215,0,.25)' },
         fore:   { color: '#ff6b35', background: 'rgba(255,107,53,.07)', border: '1px solid rgba(255,107,53,.25)' },
       };
-      return { display: 'flex', alignItems: 'center', gap: 6, fontFamily: "'Share Tech Mono',monospace", fontSize: 10, letterSpacing: 1, padding: '3px 10px', borderRadius: 2, backdropFilter: 'blur(4px)', ...colors[type] };
+      return { display: 'flex', alignItems: 'center', gap: 6, fontFamily: "'Share Tech Mono',monospace", fontSize: 12, letterSpacing: 1, padding: '4px 12px', borderRadius: 2, backdropFilter: 'blur(4px)', ...colors[type] };
     },
     dot: (col) => ({ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: col }),
     pill: (type) => {
@@ -316,12 +320,12 @@ export default function LandingPage() {
         p2: { bottom: 60, left: -14, color: '#ff6b35', borderColor: 'rgba(255,107,53,.3)', animationDelay: '1.2s' },
         p3: { bottom: -12, right: 20, color: '#00ffb4', borderColor: 'rgba(0,255,180,.25)', animationDelay: '2.1s' },
       };
-      return { position: 'absolute', background: 'rgba(0,10,5,.75)', border: '1px solid', padding: '5px 12px', fontFamily: "'Share Tech Mono',monospace", fontSize: 10, borderRadius: 2, whiteSpace: 'nowrap', animation: 'pillBlink 3s ease-in-out infinite', backdropFilter: 'blur(6px)', zIndex: 10, ...variants[type] };
+      return { position: 'absolute', background: 'rgba(0,10,5,.8)', border: '1px solid', padding: '6px 14px', fontFamily: "'Share Tech Mono',monospace", fontSize: 12, borderRadius: 2, whiteSpace: 'nowrap', animation: 'pillBlink 3s ease-in-out infinite', backdropFilter: 'blur(6px)', zIndex: 10, ...variants[type] };
     },
     centerText: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 28px', position: 'relative', zIndex: 5 },
-    overline: { fontFamily: "'Share Tech Mono',monospace", color: '#00ffb4', fontSize: 11, letterSpacing: 6, textTransform: 'uppercase', marginBottom: 18, opacity: 0.8, animation: 'fadeUp 1s ease .2s both' },
-    h1: { fontFamily: "'Orbitron',monospace", fontWeight: 900, fontSize: 39, lineHeight: 1.1, letterSpacing: -1, animation: 'fadeUp 1s ease .4s both', margin: 0 },
-    sub: { marginTop: 14, fontSize: 14, color: 'rgba(255,255,255,.4)', letterSpacing: 2, fontWeight: 300, animation: 'fadeUp 1s ease .6s both' },
+    overline: { fontFamily: "'Share Tech Mono',monospace", color: '#00ffb4', fontSize: 13, letterSpacing: 5, textTransform: 'uppercase', marginBottom: 18, opacity: 0.85, animation: 'fadeUp 1s ease .2s both' },
+    h1: { fontFamily: "'Orbitron',monospace", fontWeight: 900, fontSize: 44, lineHeight: 1.1, letterSpacing: -1, animation: 'fadeUp 1s ease .4s both', margin: 0 },
+    sub: { marginTop: 16, fontSize: 16, color: 'rgba(255,255,255,.45)', letterSpacing: 2, fontWeight: 400, animation: 'fadeUp 1s ease .6s both' },
     pipeline: { display: 'flex', alignItems: 'center', marginTop: 26, animation: 'fadeUp 1s ease .75s both' },
     pipeStep: (type) => {
       const variants = {
@@ -330,17 +334,17 @@ export default function LandingPage() {
         pred:  { color: '#ffd700', borderColor: 'rgba(255,215,0,.35)', background: 'rgba(255,215,0,.06)' },
         fore:  { color: '#ff6b35', borderColor: 'rgba(255,107,53,.4)', background: 'rgba(255,107,53,.06)' },
       };
-      return { padding: '8px 12px', fontFamily: "'Share Tech Mono',monospace", fontSize: 9, letterSpacing: '1.5px', textAlign: 'center', border: '1px solid', lineHeight: 1.6, ...variants[type] };
+      return { padding: '9px 14px', fontFamily: "'Share Tech Mono',monospace", fontSize: 11, letterSpacing: '1.5px', textAlign: 'center', border: '1px solid', lineHeight: 1.7, ...variants[type] };
     },
     pipeArrow: { color: 'rgba(255,255,255,.3)', fontFamily: "'Share Tech Mono',monospace", fontSize: 16, padding: '0 5px' },
     badgeRow: { display: 'flex', gap: 10, marginTop: 22, animation: 'fadeUp 1s ease .9s both' },
-    badge: { padding: '5px 14px', border: '1px solid rgba(0,255,180,.25)', color: 'rgba(0,255,180,.7)', fontFamily: "'Share Tech Mono',monospace", fontSize: 10, letterSpacing: 2, background: 'rgba(0,255,180,.04)', position: 'relative', overflow: 'hidden' },
-    cta: { marginTop: 26, padding: '13px 44px', background: 'linear-gradient(135deg,#00ffb4 0%,#00d4ff 100%)', color: '#000', fontFamily: "'Orbitron',monospace", fontWeight: 700, fontSize: 12, letterSpacing: 3, border: 'none', cursor: 'pointer', clipPath: 'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)', animation: 'fadeUp 1s ease 1.1s both', textTransform: 'uppercase' },
+    badge: { padding: '6px 16px', border: '1px solid rgba(0,255,180,.25)', color: 'rgba(0,255,180,.75)', fontFamily: "'Share Tech Mono',monospace", fontSize: 12, letterSpacing: 2, background: 'rgba(0,255,180,.04)', position: 'relative', overflow: 'hidden' },
+    cta: { marginTop: 28, padding: '15px 50px', background: 'linear-gradient(135deg,#00ffb4 0%,#00d4ff 100%)', color: '#000', fontFamily: "'Orbitron',monospace", fontWeight: 700, fontSize: 14, letterSpacing: 3, border: 'none', cursor: 'pointer', clipPath: 'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)', animation: 'fadeUp 1s ease 1.1s both', textTransform: 'uppercase' },
     rightPanel: { width: 245, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 11 },
-    formulaBox: (delay = '.5s') => ({ background: 'rgba(0,10,5,.65)', border: '1px solid rgba(0,255,180,.15)', padding: '11px 13px', fontFamily: "'Share Tech Mono',monospace", fontSize: 11, color: 'rgba(0,255,180,.7)', lineHeight: 1.9, backdropFilter: 'blur(8px)', position: 'relative', overflow: 'hidden', animation: `fadeLeft 1s ease ${delay} both` }),
-    fLabel: { fontSize: 9, letterSpacing: 3, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', marginBottom: 4, display: 'block' },
-    tickerStrip: { display: 'flex', flexDirection: 'column', gap: 5, animation: 'fadeLeft 1s ease .7s both' },
-    tickRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', background: 'rgba(0,10,5,.5)', border: '1px solid rgba(255,255,255,.06)', fontFamily: "'Share Tech Mono',monospace", fontSize: 10 },
+    formulaBox: (delay = '.5s') => ({ background: 'rgba(0,10,5,.65)', border: '1px solid rgba(0,255,180,.15)', padding: '13px 15px', fontFamily: "'Share Tech Mono',monospace", fontSize: 13, color: 'rgba(0,255,180,.75)', lineHeight: 2.0, backdropFilter: 'blur(8px)', position: 'relative', overflow: 'hidden', animation: `fadeLeft 1s ease ${delay} both` }),
+    fLabel: { fontSize: 10, letterSpacing: 3, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', marginBottom: 5, display: 'block' },
+    tickerStrip: { display: 'flex', flexDirection: 'column', gap: 6, animation: 'fadeLeft 1s ease .7s both' },
+    tickRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: 'rgba(0,10,5,.5)', border: '1px solid rgba(255,255,255,.06)', fontFamily: "'Share Tech Mono',monospace", fontSize: 12 },
   };
 
   return (

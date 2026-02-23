@@ -67,7 +67,7 @@ const CSS = `
   50%{filter:drop-shadow(0 0 14px var(--eq-cyan))}
 }
 .eq-brand {
-  font-family:var(--eq-display); font-size:17px; font-weight:700; letter-spacing:1px;
+  font-family:var(--eq-display); font-size:20px; font-weight:700; letter-spacing:1px;
   background:linear-gradient(90deg,var(--eq-green),var(--eq-cyan));
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap;
 }
@@ -219,8 +219,8 @@ const CSS = `
 }
 .eq-topbar-right { display:flex; align-items:center; gap:20px; }
 .eq-nav-pill {
-  font-family:var(--eq-mono); font-size:10px; letter-spacing:2px;
-  color:var(--eq-muted); cursor:pointer; padding:5px 12px; border-radius:2px;
+  font-family:var(--eq-mono); font-size:12px; letter-spacing:2px;
+  color:var(--eq-muted); cursor:pointer; padding:6px 14px; border-radius:2px;
   border:1px solid transparent; transition:.2s;
 }
 .eq-nav-pill:hover,.eq-nav-pill.active {
@@ -271,11 +271,11 @@ const CSS = `
   background:linear-gradient(90deg,transparent,var(--eq-border2),transparent);
 }
 .eq-hero-eyebrow {
-  font-family:var(--eq-mono); font-size:10px; letter-spacing:6px;
-  color:rgba(0,255,140,.5); text-transform:uppercase; margin-bottom:10px;
+  font-family:var(--eq-mono); font-size:12px; letter-spacing:6px;
+  color:rgba(0,255,140,.6); text-transform:uppercase; margin-bottom:12px;
 }
 .eq-hero-title {
-  font-family:var(--eq-display); font-size:36px; font-weight:900;
+  font-family:var(--eq-display); font-size:44px; font-weight:900;
   letter-spacing:-1px; line-height:1;
   background:linear-gradient(135deg,var(--eq-green) 0%,var(--eq-cyan) 40%,var(--eq-white) 70%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
@@ -286,8 +286,8 @@ const CSS = `
   50%{filter:drop-shadow(0 0 20px rgba(0,255,140,.4))}
 }
 .eq-hero-sub {
-  margin-top:6px; font-size:13px; color:var(--eq-muted);
-  letter-spacing:3px; font-weight:300; font-family:var(--eq-mono);
+  margin-top:8px; font-size:15px; color:var(--eq-muted);
+  letter-spacing:2px; font-weight:400; font-family:var(--eq-mono);
 }
 
 /* MAIN BODY */
@@ -343,7 +343,7 @@ const CSS = `
 }
 .eq-model-item:hover { background:rgba(0,255,140,.05); border-left-color:rgba(0,255,140,.3); }
 .eq-model-item.active { background:rgba(0,255,140,.09); border-left-color:var(--eq-green); }
-.eq-model-name { font-family:var(--eq-body); font-size:13px; font-weight:500; color:var(--eq-white); flex:1; }
+.eq-model-name { font-family:var(--eq-body); font-size:15px; font-weight:500; color:var(--eq-white); flex:1; }
 .eq-model-item:hover .eq-model-name,.eq-model-item.active .eq-model-name { color:var(--eq-green); }
 .eq-model-tag {
   font-family:var(--eq-mono); font-size:8px; letter-spacing:1px; padding:2px 6px;
@@ -384,8 +384,8 @@ const CSS = `
 }
 .eq-tab-bar::-webkit-scrollbar { display:none; }
 .eq-tab-btn {
-  display:flex; align-items:center; gap:8px; padding:11px 18px;
-  font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px; padding:12px 20px;
+  font-family:var(--eq-mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
   color:var(--eq-muted); cursor:pointer; white-space:nowrap;
   border-bottom:2px solid transparent; transition:all .18s; margin-bottom:-1px;
 }
@@ -409,15 +409,15 @@ const CSS = `
 
 /* DETAIL BODY */
 .eq-detail-body { flex:1; overflow-y:auto; padding:20px 22px; display:flex; flex-direction:column; gap:20px; }
-.eq-overview { font-size:14px; line-height:1.75; color:rgba(232,244,237,.75); font-weight:400; letter-spacing:.3px; }
+.eq-overview { font-size:16px; line-height:1.8; color:rgba(232,244,237,.82); font-weight:400; letter-spacing:.2px; }
 .eq-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
 .eq-stat-card { background:rgba(0,255,140,.03); border:1px solid var(--eq-border); border-radius:3px; padding:12px 14px; text-align:center; }
-.eq-stat-val { font-family:var(--eq-display); font-size:18px; font-weight:700; line-height:1; }
-.eq-stat-lbl { font-family:var(--eq-mono); font-size:9px; letter-spacing:2px; color:var(--eq-muted); margin-top:5px; text-transform:uppercase; }
+.eq-stat-val { font-family:var(--eq-display); font-size:20px; font-weight:700; line-height:1; }
+.eq-stat-lbl { font-family:var(--eq-mono); font-size:11px; letter-spacing:2px; color:var(--eq-muted); margin-top:6px; text-transform:uppercase; }
 .eq-section { background:rgba(0,0,0,.25); border:1px solid var(--eq-border); border-radius:3px; padding:16px 18px; }
 .eq-sec-head {
-  font-family:var(--eq-mono); font-size:9px; letter-spacing:4px; text-transform:uppercase;
-  color:rgba(0,255,140,.5); margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  font-family:var(--eq-mono); font-size:11px; letter-spacing:4px; text-transform:uppercase;
+  color:rgba(0,255,140,.6); margin-bottom:14px; display:flex; align-items:center; gap:8px;
 }
 .eq-sec-head::after { content:''; flex:1; height:1px; background:var(--eq-border); }
 .eq-use-cases { display:flex; flex-wrap:wrap; gap:8px; }
@@ -437,7 +437,7 @@ const CSS = `
 .eq-param-table { width:100%; border-collapse:collapse; }
 .eq-param-table tr { border-bottom:1px solid rgba(0,255,140,.06); }
 .eq-param-table tr:last-child { border-bottom:none; }
-.eq-param-table td { padding:7px 10px; font-family:var(--eq-mono); font-size:11px; vertical-align:top; }
+.eq-param-table td { padding:8px 12px; font-family:var(--eq-mono); font-size:13px; vertical-align:top; }
 .eq-param-table td:first-child { color:var(--eq-green); width:38%; }
 .eq-param-table td:last-child { color:var(--eq-muted); }
 .eq-cplx-row { display:flex; align-items:center; gap:12px; margin-top:6px; }
@@ -460,12 +460,12 @@ const CSS = `
 .eq-file-card:hover { border-color:var(--eq-border2); background:rgba(0,255,140,.03); transform:translateX(2px); }
 .eq-file-icon { width:42px; height:42px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
 .eq-file-info { flex:1; min-width:0; }
-.eq-file-name { font-family:var(--eq-mono); font-size:12px; color:var(--eq-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
-.eq-file-meta { display:flex; gap:12px; align-items:center; font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:1px; }
+.eq-file-name { font-family:var(--eq-mono); font-size:14px; color:var(--eq-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
+.eq-file-meta { display:flex; gap:12px; align-items:center; font-family:var(--eq-mono); font-size:11px; color:var(--eq-muted); letter-spacing:1px; }
 .eq-file-type { text-transform:uppercase; }
 .eq-file-size { color:var(--eq-green); }
 .eq-file-user { color:var(--eq-cyan); }
-.eq-file-desc { font-size:11px; color:rgba(232,244,237,.5); margin-top:4px; font-family:var(--eq-body); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.eq-file-desc { font-size:13px; color:rgba(232,244,237,.6); margin-top:5px; font-family:var(--eq-body); line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .eq-file-actions { display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap; }
 .eq-fc-btn {
   padding:6px 14px; border-radius:2px; cursor:pointer;
@@ -658,9 +658,9 @@ const CSS = `
 .eq-guide-card:hover { border-color:var(--eq-border2); background:rgba(0,229,255,.03); transform:translateX(2px); }
 .eq-guide-card-icon { width:42px; height:42px; border-radius:4px; background:rgba(0,229,255,.08); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
 .eq-guide-card-info { flex:1; min-width:0; }
-.eq-guide-card-title { font-family:var(--eq-mono); font-size:12px; color:var(--eq-white); margin-bottom:3px; }
-.eq-guide-card-desc { font-size:11px; color:rgba(232,244,237,.5); font-family:var(--eq-body); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.eq-guide-card-meta { display:flex; gap:8px; align-items:center; font-family:var(--eq-mono); font-size:9px; color:var(--eq-muted); letter-spacing:.5px; margin-top:4px; flex-wrap:wrap; }
+.eq-guide-card-title { font-family:var(--eq-mono); font-size:14px; color:var(--eq-white); margin-bottom:4px; }
+.eq-guide-card-desc { font-size:13px; color:rgba(232,244,237,.6); font-family:var(--eq-body); line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.eq-guide-card-meta { display:flex; gap:8px; align-items:center; font-family:var(--eq-mono); font-size:11px; color:var(--eq-muted); letter-spacing:.5px; margin-top:5px; flex-wrap:wrap; }
 .eq-guide-card-author { color:var(--eq-cyan); }
 .eq-guide-card-actions { display:flex; gap:8px; flex-shrink:0; }
 .eq-guide-hidden-badge { font-family:var(--eq-mono); font-size:7px; letter-spacing:1px; padding:2px 6px; border-radius:1px; border:1px solid rgba(255,127,81,.3); color:var(--eq-orange); background:rgba(255,127,81,.06); text-transform:uppercase; }
@@ -682,7 +682,42 @@ const CSS = `
 .eq-pub-guide-submit { padding:7px 20px; background:rgba(255,127,81,.1); border:1px solid var(--eq-orange); color:var(--eq-orange); font-family:var(--eq-mono); font-size:10px; letter-spacing:2px; cursor:pointer; border-radius:2px; transition:.15s; }
 .eq-pub-guide-submit:hover:not(:disabled) { background:rgba(255,127,81,.2); }
 .eq-pub-guide-submit:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ═══ STAR RATINGS ═══ */
+.eq-rating-row { display:flex; align-items:center; gap:7px; margin-top:8px; flex-wrap:wrap; }
+.eq-star-row { display:flex; gap:3px; align-items:center; }
+.eq-star {
+  font-size:16px; cursor:pointer; line-height:1; user-select:none;
+  transition:transform .12s, color .12s;
+}
+.eq-star.filled { color:var(--eq-gold); text-shadow:0 0 8px rgba(255,209,102,.55); }
+.eq-star.empty { color:rgba(255,255,255,.18); }
+.eq-star:hover { transform:scale(1.3); color:var(--eq-gold); }
+.eq-rating-label { font-family:var(--eq-mono); font-size:9px; letter-spacing:2px; color:var(--eq-muted); text-transform:uppercase; }
+.eq-rating-meta { font-family:var(--eq-mono); font-size:12px; color:var(--eq-gold); letter-spacing:.5px; font-weight:600; }
+.eq-rating-count { font-family:var(--eq-mono); font-size:10px; color:var(--eq-muted); }
+.eq-rating-none { font-family:var(--eq-mono); font-size:9px; color:rgba(232,244,237,.25); letter-spacing:1px; }
+
+/* ═══ CLAUDE VALIDATION ═══ */
+.eq-val-box { padding:14px 16px; border-radius:4px; margin:4px 0; }
+.eq-val-checking { border:1px solid rgba(0,229,255,.35); background:rgba(0,229,255,.05); }
+.eq-val-pass    { border:1px solid rgba(0,255,140,.35); background:rgba(0,255,140,.05); }
+.eq-val-fail    { border:1px solid rgba(255,77,109,.35); background:rgba(255,77,109,.05); }
+.eq-val-title {
+  font-family:var(--eq-mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:8px;
+}
+.eq-val-checking .eq-val-title { color:var(--eq-cyan); }
+.eq-val-pass    .eq-val-title { color:var(--eq-green); }
+.eq-val-fail    .eq-val-title { color:var(--eq-red); }
+.eq-val-detail { font-family:var(--eq-body); font-size:13px; color:rgba(232,244,237,.65); line-height:1.65; }
+.eq-val-spinner { width:10px; height:10px; border:1.5px solid rgba(0,229,255,.3); border-top-color:var(--eq-cyan); border-radius:50%; animation:eqSpin .7s linear infinite; flex-shrink:0; }
+
+/* ═══ FILE CARD ENHANCEMENTS ═══ */
+.eq-file-card:hover { border-color:var(--eq-border2); background:rgba(0,255,140,.04); transform:translateX(3px); box-shadow:0 4px 20px rgba(0,0,0,.3); }
+.eq-fc-btn { font-size:11px; padding:7px 16px; }
 `;
+
 
 /* ─── ARIMA GUIDE (kept as dead code — DB-driven system replaces this) ─── */
 const ARIMA_GUIDE = [
@@ -781,6 +816,108 @@ const ARIMA_GUIDE = [
     ]
   },
 ];
+
+/* ─── CLAUDE API KEY — notebook safety + relevance validation ─── */
+// ⚠ SECURITY NOTE: This key is visible in the browser JS bundle (GitHub Pages = client-only).
+// For production-grade security, proxy this through a Supabase Edge Function.
+const CLAUDE_API_KEY = import.meta.env.VITE_CLAUDE_KEY || '';
+
+/*
+  ── Supabase SQL: file_ratings table (run ONCE in SQL Editor) ────────────────
+  create table file_ratings (
+    id         uuid primary key default gen_random_uuid(),
+    file_id    uuid not null,
+    user_id    uuid references auth.users(id) on delete cascade,
+    rating     int  not null check (rating >= 1 and rating <= 5),
+    created_at timestamptz default now(),
+    unique (file_id, user_id)
+  );
+  alter table file_ratings enable row level security;
+  create policy "Users can insert own rating" on file_ratings
+    for insert to authenticated with check (auth.uid() = user_id);
+  create policy "Users can update own rating" on file_ratings
+    for update to authenticated using (auth.uid() = user_id);
+  create policy "All authenticated can read" on file_ratings
+    for select to authenticated using (true);
+  ─────────────────────────────────────────────────────────────────────────────
+*/
+
+async function validateNotebookWithClaude(notebookFile, modelId) {
+  const text = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsText(notebookFile);
+  });
+
+  let nb;
+  try { nb = JSON.parse(text); }
+  catch { return { relevant: false, safe: false, relevance_reason: 'Invalid notebook JSON — could not parse.', safety_reason: 'File could not be parsed.' }; }
+
+  const cells = (nb.cells || []).slice(0, 25);
+  const codeSnippet = cells.map((cell, i) => {
+    const src = Array.isArray(cell.source) ? cell.source.join('') : (cell.source || '');
+    return `--- Cell ${i + 1} (${cell.cell_type}) ---\n${src.slice(0, 500)}`;
+  }).join('\n\n').slice(0, 6000);
+
+  const modelLabels = {
+    arima: 'ARIMA/SARIMA time series forecasting', garch: 'GARCH volatility modeling',
+    var: 'Vector AutoRegression (VAR)', xgb: 'XGBoost/LightGBM gradient boosting',
+    svr: 'Support Vector Regression', elastic: 'ElasticNet/Ridge/Lasso regression',
+    lstm: 'LSTM/GRU recurrent neural networks', tcn: 'Temporal Convolutional Network',
+    transformer: 'Transformer/TFT attention models', nbeats: 'N-BEATS/N-HiTS neural forecasting',
+    arima_lstm: 'ARIMA+LSTM hybrid model', stacking: 'Model stacking / ensemble methods',
+    prophet_ml: 'Prophet + ML decomposition', gp: 'Gaussian Process regression',
+    bsts: 'Bayesian Structural Time Series', deepar: 'DeepAR probabilistic forecasting',
+    ppo_dqn: 'Reinforcement Learning (PPO/DQN)', marl: 'Multi-Agent RL simulation',
+  };
+  const modelDesc = modelLabels[modelId] || modelId;
+
+  const prompt = `You are a content validator for EternalQuants, a quantitative finance education platform.
+
+A user wants to upload a Jupyter notebook to the "${modelDesc}" section.
+
+Review the notebook and answer TWO questions:
+1. RELEVANCE: Is this notebook related to "${modelDesc}" in a finance, data science, or quantitative analysis context? Be lenient — general Python finance/ML work qualifies.
+2. SAFETY: Does this notebook contain harmful code? (os.system file deletion, network attacks, crypto mining, malware, completely non-educational content)
+
+Notebook excerpt (first 25 cells):
+${codeSnippet}
+
+Respond ONLY with this exact JSON (no extra text):
+{
+  "relevant": true,
+  "safe": true,
+  "relevance_reason": "1-2 sentence explanation",
+  "safety_reason": "1-2 sentence explanation"
+}`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': CLAUDE_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: 500,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error('Claude API: ' + errText.slice(0, 120));
+  }
+
+  const data = await response.json();
+  const content = data.content?.[0]?.text || '';
+  const match = content.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('Unexpected validation response');
+  return JSON.parse(match[0]);
+}
 
 /* ─── MODEL DATA (unchanged from HTML) ─── */
 const CATEGORIES = [
@@ -909,6 +1046,81 @@ function MiniChart({ color }) {
   return (
     <div className="eq-mini-chart">
       <svg ref={svgRef} viewBox="0 0 500 90" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
+}
+
+/* ─── STAR RATING ─── */
+function StarRating({ fileId, user, showToast }) {
+  const [avg, setAvg] = useState(null);
+  const [count, setCount] = useState(0);
+  const [userRating, setUserRating] = useState(0);
+  const [hovered, setHovered] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!fileId) return;
+    loadRatings();
+  }, [fileId]);
+
+  async function loadRatings() {
+    setLoading(true);
+    const { data } = await supabase
+      .from('file_ratings')
+      .select('rating, user_id')
+      .eq('file_id', fileId);
+    if (data && data.length > 0) {
+      setCount(data.length);
+      setAvg(data.reduce((s, r) => s + r.rating, 0) / data.length);
+      const mine = data.find(r => r.user_id === user?.id);
+      if (mine) setUserRating(mine.rating);
+    } else {
+      setCount(0); setAvg(null); setUserRating(0);
+    }
+    setLoading(false);
+  }
+
+  async function handleRate(star) {
+    if (!user || saving) return;
+    setSaving(true);
+    const { error } = await supabase.from('file_ratings').upsert(
+      { file_id: fileId, user_id: user.id, rating: star },
+      { onConflict: 'file_id,user_id' }
+    );
+    setSaving(false);
+    if (error) { showToast('Rating failed: ' + error.message, 'error'); return; }
+    setUserRating(star);
+    loadRatings();
+    showToast(`★ Rated ${star}/5`, 'success');
+  }
+
+  const display = hovered || userRating;
+
+  return (
+    <div className="eq-rating-row">
+      <span className="eq-rating-label">RATE:</span>
+      <div className="eq-star-row">
+        {[1, 2, 3, 4, 5].map(s => (
+          <span
+            key={s}
+            className={`eq-star ${display >= s ? 'filled' : 'empty'}`}
+            onMouseEnter={() => setHovered(s)}
+            onMouseLeave={() => setHovered(0)}
+            onClick={() => handleRate(s)}
+            title={`Rate ${s} star${s > 1 ? 's' : ''}`}
+          >★</span>
+        ))}
+      </div>
+      {!loading && avg != null && (
+        <>
+          <span className="eq-rating-meta">{avg.toFixed(1)}</span>
+          <span className="eq-rating-count">({count} rating{count !== 1 ? 's' : ''})</span>
+        </>
+      )}
+      {!loading && avg == null && (
+        <span className="eq-rating-none">be the first to rate</span>
+      )}
     </div>
   );
 }
@@ -1552,7 +1764,7 @@ function FeedbackModal({ user, onClose, showToast }) {
 }
 
 /* ─── FILE CARD ─── */
-function FileCard({ file, showUser, onDownload, onView, onDelete, admin }) {
+function FileCard({ file, showUser, onDownload, onView, onDelete, admin, user, showToast }) {
   return (
     <div className={`eq-file-card ${fileCardClass(file.name)}`}>
       <div className="eq-file-icon" style={{ background: fileBg(file.name) }}>{fileIcon(file.name)}</div>
@@ -1565,6 +1777,10 @@ function FileCard({ file, showUser, onDownload, onView, onDelete, admin }) {
           {file.created_at && <span>{new Date(file.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
         </div>
         {file.description && <div className="eq-file-desc">{file.description}</div>}
+        {/* Star rating — only shown on community files */}
+        {showUser && file.id && (
+          <StarRating fileId={file.id} user={user} showToast={showToast} />
+        )}
       </div>
       <div className="eq-file-actions">
         <button className="eq-fc-btn eq-fc-view" onClick={() => onView(file)}>👁 VIEW</button>
@@ -1576,7 +1792,7 @@ function FileCard({ file, showUser, onDownload, onView, onDelete, admin }) {
 }
 
 /* ─── FILES TAB (Live or Community) ─── */
-function FilesTab({ modelId, bucket, showUser, admin, refresh, showToast }) {
+function FilesTab({ modelId, bucket, showUser, admin, refresh, showToast, user }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewer, setViewer] = useState(null);
@@ -1644,7 +1860,8 @@ function FilesTab({ modelId, bucket, showUser, admin, refresh, showToast }) {
       <div className="eq-files-grid">
         {files.map(f => (
           <FileCard key={f.id} file={f} showUser={showUser} admin={admin}
-            onDownload={handleDownload} onView={handleView} onDelete={handleDelete} />
+            onDownload={handleDownload} onView={handleView} onDelete={handleDelete}
+            user={user} showToast={showToast} />
         ))}
       </div>
       {viewer && <FileViewer file={viewer} onClose={() => setViewer(null)} />}
@@ -1659,12 +1876,15 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [validationError, setValidationError] = useState('');
+  // Claude notebook validation state: null | { status:'checking'|'pass'|'fail', message, detail }
+  const [claudeVal, setClaudeVal] = useState(null);
   const dropRef = useRef(null);
 
   const bucket = admin ? 'live-files' : 'community-files';
 
   function addFiles(newFiles) {
     setValidationError('');
+    setClaudeVal(null);
     const allowed = ['.ipynb', '.csv', '.xlsx', '.parquet'];
     const valid = Array.from(newFiles).filter(f => allowed.some(ext => f.name.endsWith(ext)));
     setFiles(prev => {
@@ -1677,6 +1897,7 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
   function removeFile(i) {
     setFiles(f => f.filter((_, idx) => idx !== i));
     setValidationError('');
+    setClaudeVal(null);
   }
 
   function validate() {
@@ -1692,6 +1913,49 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
 
   async function handlePublish() {
     if (!validate()) return;
+
+    // ── Claude AI validation for non-admin notebook uploads ─────────────────
+    if (!admin) {
+      const notebookFile = files.find(f => isNotebook(f.name));
+      if (notebookFile) {
+        setClaudeVal({ status: 'checking' });
+        try {
+          const result = await validateNotebookWithClaude(notebookFile, modelId);
+          if (!result.safe) {
+            setClaudeVal({
+              status: 'fail',
+              message: '⚠ Safety check failed — notebook contains potentially harmful code',
+              detail: result.safety_reason,
+            });
+            showToast('Upload blocked — safety issue detected by Claude AI', 'error');
+            return;
+          }
+          if (!result.relevant) {
+            setClaudeVal({
+              status: 'fail',
+              message: '⚠ Relevance check failed — notebook does not match this model section',
+              detail: result.relevance_reason + ' Please upload to the correct model section.',
+            });
+            showToast('Upload blocked — notebook does not match this section', 'error');
+            return;
+          }
+          setClaudeVal({
+            status: 'pass',
+            message: '✓ Validated by Claude AI — notebook is safe and relevant',
+            detail: result.relevance_reason,
+          });
+        } catch (err) {
+          // Claude validation unavailable — warn but allow upload
+          setClaudeVal({
+            status: 'pass',
+            message: '⚠ AI validation temporarily unavailable — proceeding',
+            detail: err.message,
+          });
+        }
+      }
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     setUploading(true); setProgress(5);
 
     const now = new Date().toISOString();
@@ -1701,7 +1965,6 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
 
     try {
       for (const file of files) {
-        const ext = file.name.split('.').pop();
         const storagePath = `${modelId}/${Date.now()}_${file.name}`;
         const { error: uploadErr } = await supabase.storage.from(bucket).upload(storagePath, file, { upsert: false });
         if (uploadErr) throw uploadErr;
@@ -1726,7 +1989,7 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
 
       setProgress(100);
       setTimeout(() => {
-        setFiles([]); setDesc(''); setProgress(0); setUploading(false);
+        setFiles([]); setDesc(''); setProgress(0); setUploading(false); setClaudeVal(null);
         showToast(`✓ ${done} file(s) published to ${admin ? 'Live Examples' : 'Community Examples'}!`);
         onPublished();
       }, 400);
@@ -1753,6 +2016,11 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
       <div className="eq-pub-rule">
         ⚠ Rule: Jupyter notebook (.ipynb) files must be uploaded together with at least one data file (.csv / .xlsx / .parquet)
       </div>
+      {!admin && (
+        <div style={{ padding: '8px 14px', background: 'rgba(0,229,255,.04)', border: '1px solid rgba(0,229,255,.15)', borderRadius: 3, fontFamily: 'var(--eq-mono)', fontSize: 11, color: 'rgba(0,229,255,.7)', letterSpacing: 1 }}>
+          🤖 Claude AI will automatically validate your notebook for safety &amp; relevance before upload
+        </div>
+      )}
 
       <div className="eq-field">
         <div className="eq-field-lbl">Description</div>
@@ -1792,9 +2060,23 @@ function PublishTab({ modelId, user, admin, onPublished, showToast }) {
 
       {validationError && <div className="eq-validation-error">{validationError}</div>}
 
+      {/* Claude AI validation status */}
+      {claudeVal && (
+        <div className={`eq-val-box eq-val-${claudeVal.status}`}>
+          <div className="eq-val-title">
+            {claudeVal.status === 'checking' && <><div className="eq-val-spinner" /> CLAUDE AI VALIDATING NOTEBOOK...</>}
+            {claudeVal.status === 'pass' && <>✓ {claudeVal.message}</>}
+            {claudeVal.status === 'fail' && <>{claudeVal.message}</>}
+          </div>
+          {claudeVal.detail && claudeVal.status !== 'checking' && (
+            <div className="eq-val-detail">{claudeVal.detail}</div>
+          )}
+        </div>
+      )}
+
       <button
         className="eq-btn-publish"
-        disabled={uploading || !files.length}
+        disabled={uploading || !files.length || claudeVal?.status === 'checking' || claudeVal?.status === 'fail'}
         onClick={handlePublish}
         style={{ position: 'relative', overflow: 'hidden' }}
       >
@@ -2127,7 +2409,7 @@ function ModelDetail({ modelId, user, admin, showToast }) {
 
       {/* Community pane */}
       <div className={`eq-pane${activeTab === 'community' ? ' active' : ''}`}>
-        <FilesTab modelId={modelId} bucket="community-files" showUser admin={admin} refresh={refreshKey} showToast={showToast} />
+        <FilesTab modelId={modelId} bucket="community-files" showUser admin={admin} refresh={refreshKey} showToast={showToast} user={user} />
       </div>
 
       {/* Publish pane */}
