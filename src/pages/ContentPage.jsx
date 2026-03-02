@@ -1346,15 +1346,52 @@ a{color:#00e5ff;}
 }
 
 /* ─── GUIDE → NEW WINDOW ─── */
-function openGuideInNewWindow(htmlContent, title) {
+async function openGuideInNewWindow(guide) {
+  const { file_type, html_content, storage_path, title } = guide;
   function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  // If content is already a full HTML document, open as-is
-  const trimmed = (htmlContent || '').trim();
+
+  // ── PDF: get signed URL and open directly ──
+  if (file_type === 'pdf') {
+    const { data, error } = await supabase.storage.from('guide-files').createSignedUrl(storage_path, 3600);
+    if (error) { alert('Could not open file: ' + error.message); return; }
+    window.open(data.signedUrl, '_blank');
+    return;
+  }
+
+  // ── AUDIO: wrap in a styled player page ──
+  if (file_type === 'audio') {
+    const { data, error } = await supabase.storage.from('guide-files').createSignedUrl(storage_path, 3600);
+    if (error) { alert('Could not open file: ' + error.message); return; }
+    const ext = (storage_path || '').split('.').pop().toLowerCase();
+    const mimeMap = { mp3: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', m4a: 'audio/mp4', aac: 'audio/aac' };
+    const mimeType = mimeMap[ext] || 'audio/mpeg';
+    const audioHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${esc(title)} — EternalQuants</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#030a06;color:#e8f4ed;font-family:'Share Tech Mono',monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;}
+#logo{font-family:'Orbitron',monospace;font-size:14px;letter-spacing:2px;background:linear-gradient(90deg,#00ff8c,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#ttl{font-size:15px;color:#00e5ff;letter-spacing:1px;text-align:center;max-width:600px;}
+audio{width:min(520px,90vw);outline:none;border-radius:8px;background:#0d1f13;}
+#meta{font-size:10px;color:rgba(232,244,237,.35);letter-spacing:1px;}
+</style></head><body>
+<div id="logo">⊙ EternalQuants</div>
+<div id="ttl">🔊 ${esc(title)}</div>
+<audio controls autoplay><source src="${data.signedUrl}" type="${mimeType}">Your browser does not support the audio element.</audio>
+<div id="meta">GUIDE · AUDIO</div>
+</body></html>`;
+    const blob = new Blob([audioHtml], { type: 'text/html' });
+    window.open(URL.createObjectURL(blob), '_blank');
+    return;
+  }
+
+  // ── HTML (default): same as before ──
+  const htmlContent = html_content || '';
+  const trimmed = htmlContent.trim();
   let finalHtml;
   if (trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html')) {
     finalHtml = htmlContent;
   } else {
-    // Wrap body content with EQ dark-themed template
     finalHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} — EternalQuants</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -1397,8 +1434,7 @@ img{max-width:100%;height:auto;border-radius:4px;margin:8px 0;}
 </body></html>`;
   }
   const blob = new Blob([finalHtml], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
+  window.open(URL.createObjectURL(blob), '_blank');
 }
 
 /* ─── FILE VIEWER MODAL ─── */
@@ -2095,47 +2131,102 @@ function PublishGuideForm({ modelId, admin, showToast, onPublished }) {
   const [desc, setDesc] = useState('');
   const [author, setAuthor] = useState('EternalQuants Team');
   const [htmlContent, setHtmlContent] = useState('');
+  const [fileType, setFileType] = useState('html'); // 'html' | 'pdf' | 'audio'
+  const [selectedFile, setSelectedFile] = useState(null); // for pdf/audio
   const [saving, setSaving] = useState(false);
 
-  function handleFileUpload(e) {
+  const ACCEPTED = { html: '.html,.htm', pdf: '.pdf', audio: '.mp3,.wav,.ogg,.m4a,.aac' };
+  const TYPE_LABELS = { html: 'HTML', pdf: 'PDF', audio: 'AUDIO' };
+  const TYPE_ICONS  = { html: '📄', pdf: '📕', audio: '🔊' };
+
+  function handleFileSelect(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.name.endsWith('.html') && !file.name.endsWith('.htm')) {
-      showToast('Only .html files are supported', 'error');
-      return;
+    if (fileType === 'html') {
+      const reader = new FileReader();
+      reader.onload = ev => setHtmlContent(ev.target.result || '');
+      reader.readAsText(file);
+      setSelectedFile(null);
+    } else {
+      setSelectedFile(file);
+      setHtmlContent('');
     }
-    const reader = new FileReader();
-    reader.onload = ev => setHtmlContent(ev.target.result || '');
-    reader.readAsText(file);
+  }
+
+  // Reset file state when type switches
+  function switchType(t) {
+    setFileType(t);
+    setHtmlContent('');
+    setSelectedFile(null);
   }
 
   async function handleSubmit() {
-    if (!title.trim() || !htmlContent.trim()) {
-      showToast('Title and HTML content are required', 'error');
-      return;
-    }
+    if (!title.trim()) { showToast('Title is required', 'error'); return; }
+    if (fileType === 'html' && !htmlContent.trim()) { showToast('HTML content is required', 'error'); return; }
+    if ((fileType === 'pdf' || fileType === 'audio') && !selectedFile) { showToast('Please select a file', 'error'); return; }
+
     setSaving(true);
-    const { error } = await supabase.from('model_guides').insert({
-      model_id: modelId,
-      title: title.trim(),
-      description: desc.trim() || null,
-      html_content: htmlContent,
-      author_name: author.trim() || 'EternalQuants Team',
-      is_active: true,
-    });
-    setSaving(false);
-    if (error) { showToast('Error: ' + error.message, 'error'); return; }
-    showToast('Guide published!', 'success');
-    setTitle(''); setDesc(''); setHtmlContent(''); setAuthor('EternalQuants Team');
-    onPublished?.();
+    try {
+      let storagePath = null;
+
+      // Upload PDF or audio to Supabase Storage
+      if (fileType !== 'html') {
+        const ext = selectedFile.name.split('.').pop().toLowerCase();
+        storagePath = `${modelId}/${Date.now()}_${selectedFile.name.replace(/\s+/g, '_')}`;
+        const { error: uploadErr } = await supabase.storage.from('guide-files').upload(storagePath, selectedFile, { upsert: false });
+        if (uploadErr) throw new Error('Storage upload failed: ' + uploadErr.message);
+      }
+
+      const { error } = await supabase.from('model_guides').insert({
+        model_id: modelId,
+        title: title.trim(),
+        description: desc.trim() || null,
+        html_content: fileType === 'html' ? htmlContent : null,
+        storage_path: storagePath,
+        file_type: fileType,
+        author_name: author.trim() || 'EternalQuants Team',
+        is_active: true,
+      });
+      if (error) throw new Error(error.message);
+
+      showToast('Guide published!', 'success');
+      setTitle(''); setDesc(''); setHtmlContent(''); setAuthor('EternalQuants Team');
+      setSelectedFile(null); setFileType('html');
+      onPublished?.();
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!admin) return null;
+
+  const canSubmit = title.trim() && (
+    (fileType === 'html' && htmlContent.trim()) ||
+    ((fileType === 'pdf' || fileType === 'audio') && selectedFile)
+  );
 
   return (
     <div className="eq-pub-guide-form">
       <div className="eq-pub-guide-hdr">📋 PUBLISH NEW GUIDE</div>
       <div className="eq-pub-guide-grid">
+        {/* File type selector */}
+        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 8, marginBottom: 4 }}>
+          {['html', 'pdf', 'audio'].map(t => (
+            <button key={t}
+              onClick={() => switchType(t)}
+              style={{
+                fontFamily: 'var(--eq-mono)', fontSize: 10, letterSpacing: 1.5,
+                padding: '5px 14px', borderRadius: 2, cursor: 'pointer',
+                background: fileType === t ? 'rgba(0,255,140,.12)' : 'transparent',
+                border: fileType === t ? '1px solid rgba(0,255,140,.5)' : '1px solid rgba(0,255,140,.18)',
+                color: fileType === t ? 'var(--eq-green)' : 'var(--eq-muted)',
+              }}
+            >{TYPE_ICONS[t]} {TYPE_LABELS[t]}</button>
+          ))}
+        </div>
+
         <div>
           <label className="eq-pub-guide-sublabel">TITLE *</label>
           <input className="eq-pub-guide-input" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Guide 1: NIFTY 50 ARIMA Analysis" maxLength={120} />
@@ -2148,26 +2239,50 @@ function PublishGuideForm({ modelId, admin, showToast, onPublished }) {
           <label className="eq-pub-guide-sublabel">SHORT DESCRIPTION</label>
           <input className="eq-pub-guide-input" value={desc} onChange={e => setDesc(e.target.value)} placeholder="Brief summary shown on the card" maxLength={200} />
         </div>
-        <div style={{ gridColumn: '1 / -1' }}>
-          <label className="eq-pub-guide-sublabel">HTML CONTENT *</label>
-          <textarea
-            className="eq-pub-guide-textarea"
-            value={htmlContent}
-            onChange={e => setHtmlContent(e.target.value)}
-            placeholder="Paste full HTML content here, or upload an .html file below..."
-            rows={8}
-          />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
-            <label className="eq-pub-guide-file-btn">
-              📁 UPLOAD .HTML FILE
-              <input type="file" accept=".html,.htm" style={{ display: 'none' }} onChange={handleFileUpload} />
-            </label>
-            {htmlContent && <span className="eq-pub-guide-char">{htmlContent.length.toLocaleString()} chars loaded</span>}
+
+        {/* HTML: textarea + file upload */}
+        {fileType === 'html' && (
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label className="eq-pub-guide-sublabel">HTML CONTENT *</label>
+            <textarea
+              className="eq-pub-guide-textarea"
+              value={htmlContent}
+              onChange={e => setHtmlContent(e.target.value)}
+              placeholder="Paste full HTML content here, or upload an .html file below..."
+              rows={8}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+              <label className="eq-pub-guide-file-btn">
+                📁 UPLOAD .HTML FILE
+                <input type="file" accept=".html,.htm" style={{ display: 'none' }} onChange={handleFileSelect} />
+              </label>
+              {htmlContent && <span className="eq-pub-guide-char">{htmlContent.length.toLocaleString()} chars loaded</span>}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* PDF / Audio: file picker only */}
+        {(fileType === 'pdf' || fileType === 'audio') && (
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label className="eq-pub-guide-sublabel">
+              {fileType === 'pdf' ? 'PDF FILE *' : 'AUDIO FILE * (.mp3, .wav, .ogg, .m4a)'}
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+              <label className="eq-pub-guide-file-btn">
+                {TYPE_ICONS[fileType]} SELECT {TYPE_LABELS[fileType]} FILE
+                <input type="file" accept={ACCEPTED[fileType]} style={{ display: 'none' }} onChange={handleFileSelect} />
+              </label>
+              {selectedFile && (
+                <span className="eq-pub-guide-char">
+                  ✓ {selectedFile.name} ({(selectedFile.size / 1024).toFixed(0)} KB)
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
       <div className="eq-pub-guide-footer">
-        <button className="eq-pub-guide-submit" onClick={handleSubmit} disabled={saving || !title.trim() || !htmlContent.trim()}>
+        <button className="eq-pub-guide-submit" onClick={handleSubmit} disabled={saving || !canSubmit}>
           {saving ? 'PUBLISHING...' : '✦ PUBLISH GUIDE'}
         </button>
       </div>
@@ -2185,7 +2300,7 @@ function GuidesTab({ modelId, admin, showToast }) {
   useEffect(() => {
     setLoading(true);
     supabase.from('model_guides')
-      .select('id, title, description, html_content, author_name, created_at, is_active')
+      .select('id, title, description, html_content, storage_path, file_type, author_name, created_at, is_active')
       .eq('model_id', modelId)
       .order('created_at', { ascending: true })
       .then(({ data, error }) => {
@@ -2247,7 +2362,9 @@ function GuidesTab({ modelId, admin, showToast }) {
         )}
         {visibleGuides.map((guide, idx) => (
           <div key={guide.id} className={`eq-guide-card${!guide.is_active ? ' guide-hidden' : ''}`}>
-            <div className="eq-guide-card-icon">📄</div>
+            <div className="eq-guide-card-icon">
+              {guide.file_type === 'pdf' ? '📕' : guide.file_type === 'audio' ? '🔊' : '📄'}
+            </div>
             <div className="eq-guide-card-info">
               <div className="eq-guide-card-title">
                 Guide {idx + 1}: {guide.title}
@@ -2263,7 +2380,7 @@ function GuidesTab({ modelId, admin, showToast }) {
             <div className="eq-guide-card-actions">
               <button
                 style={{ padding: '5px 14px', background: 'rgba(0,229,255,.08)', border: '1px solid rgba(0,229,255,.3)', color: 'var(--eq-cyan)', fontFamily: 'var(--eq-mono)', fontSize: 10, cursor: 'pointer', borderRadius: 2, letterSpacing: 1 }}
-                onClick={() => openGuideInNewWindow(guide.html_content, guide.title)}
+                onClick={() => openGuideInNewWindow(guide)}
               >
                 ▶ OPEN
               </button>
@@ -2660,4 +2777,3 @@ export default function ContentPage() {
       )}
     </>
   );
-}
