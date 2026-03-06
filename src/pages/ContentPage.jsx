@@ -2556,12 +2556,28 @@ export default function ContentPage() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
   const [inboxUnread, setInboxUnread] = useState(0);
+  const [guidedModelIds, setGuidedModelIds] = useState(null); // null = loading; Set = loaded
 
   // Load unread count for admin badge
   useEffect(() => {
     if (!admin) return;
     supabase.from('feedback').select('id', { count: 'exact', head: true }).eq('status', 'new')
       .then(({ count }) => setInboxUnread(count || 0));
+  }, [admin]);
+
+  // Load model IDs that have at least one active guide (for non-admin visibility filter)
+  useEffect(() => {
+    if (admin) {
+      setGuidedModelIds(new Set()); // admin sees all — empty Set used as sentinel
+      return;
+    }
+    supabase
+      .from('model_guides')
+      .select('model_id')
+      .eq('is_active', true)
+      .then(({ data }) => {
+        setGuidedModelIds(new Set((data || []).map(r => r.model_id)));
+      });
   }, [admin]);
   const { toast, showToast } = useToast();
 
@@ -2595,16 +2611,24 @@ export default function ContentPage() {
     navigate('/', { replace: true });
   }
 
-  // Filter models
+  // Filter models — admin sees all; normal users only see models with active guides
   const filteredCats = CATEGORIES.map(cat => ({
     ...cat,
-    models: search
-      ? cat.models.filter(m =>
-          m.name.toLowerCase().includes(search.toLowerCase()) ||
-          m.fullName.toLowerCase().includes(search.toLowerCase()) ||
-          m.overview.toLowerCase().includes(search.toLowerCase())
-        )
-      : cat.models,
+    models: cat.models.filter(m => {
+      // Guide availability gate (skip for admin)
+      if (!admin) {
+        if (guidedModelIds === null) return false;        // still loading
+        if (!guidedModelIds.has(m.id)) return false;     // no active guide uploaded
+      }
+      // Search filter
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return (
+        m.name.toLowerCase().includes(q) ||
+        m.fullName.toLowerCase().includes(q) ||
+        m.overview.toLowerCase().includes(q)
+      );
+    }),
   })).filter(cat => cat.models.length > 0);
 
   const totalVisible = filteredCats.reduce((sum, cat) => sum + cat.models.length, 0);
@@ -2707,28 +2731,38 @@ export default function ContentPage() {
               />
             </div>
             <div className="eq-model-list">
-              {filteredCats.map(cat => (
-                <div key={cat.id} className={`eq-${cat.id}`}>
-                  <div className="eq-cat-hdr" onClick={() => toggleCat(cat.id)}>
-                    <div className="eq-cat-icon">{cat.icon}</div>
-                    <div className="eq-cat-name">{cat.label}</div>
-                    <div className="eq-cat-badge">{cat.short}</div>
-                    <span className={`eq-cat-chev${openCats.has(cat.id) ? ' open' : ''}`}>›</span>
-                  </div>
-                  <div className="eq-cat-models" style={{ maxHeight: openCats.has(cat.id) ? 500 : 0 }}>
-                    {cat.models.map(m => (
-                      <div
-                        key={m.id}
-                        className={`eq-model-item${selectedModel === m.id ? ' active' : ''}`}
-                        onClick={() => setSelectedModel(m.id)}
-                      >
-                        <div className="eq-model-name">{m.name}</div>
-                        <div className="eq-model-tag">{m.tag}</div>
-                      </div>
-                    ))}
-                  </div>
+              {!admin && guidedModelIds === null ? (
+                <div style={{ textAlign: 'center', padding: '32px 0', opacity: 0.45, fontSize: 10, letterSpacing: 2, color: '#00ff8c' }}>
+                  LOADING MODELS…
                 </div>
-              ))}
+              ) : filteredCats.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '32px 0', opacity: 0.4, fontSize: 10, letterSpacing: 2, color: '#8a9bb0' }}>
+                  NO MODELS AVAILABLE
+                </div>
+              ) : (
+                filteredCats.map(cat => (
+                  <div key={cat.id} className={`eq-${cat.id}`}>
+                    <div className="eq-cat-hdr" onClick={() => toggleCat(cat.id)}>
+                      <div className="eq-cat-icon">{cat.icon}</div>
+                      <div className="eq-cat-name">{cat.label}</div>
+                      <div className="eq-cat-badge">{cat.short}</div>
+                      <span className={`eq-cat-chev${openCats.has(cat.id) ? ' open' : ''}`}>›</span>
+                    </div>
+                    <div className="eq-cat-models" style={{ maxHeight: openCats.has(cat.id) ? 500 : 0 }}>
+                      {cat.models.map(m => (
+                        <div
+                          key={m.id}
+                          className={`eq-model-item${selectedModel === m.id ? ' active' : ''}`}
+                          onClick={() => setSelectedModel(m.id)}
+                        >
+                          <div className="eq-model-name">{m.name}</div>
+                          <div className="eq-model-tag">{m.tag}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
