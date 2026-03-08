@@ -817,10 +817,6 @@ const ARIMA_GUIDE = [
   },
 ];
 
-/* ─── CLAUDE API KEY — notebook safety + relevance validation ─── */
-// ⚠ SECURITY NOTE: This key is visible in the browser JS bundle (GitHub Pages = client-only).
-// For production-grade security, proxy this through a Supabase Edge Function.
-const CLAUDE_API_KEY = import.meta.env.VITE_CLAUDE_KEY || '';
 
 /*
   ── Supabase SQL: file_ratings table (run ONCE in SQL Editor) ────────────────
@@ -860,63 +856,13 @@ async function validateNotebookWithClaude(notebookFile, modelId) {
     return `--- Cell ${i + 1} (${cell.cell_type}) ---\n${src.slice(0, 500)}`;
   }).join('\n\n').slice(0, 6000);
 
-  const modelLabels = {
-    arima: 'ARIMA/SARIMA time series forecasting', garch: 'GARCH volatility modeling',
-    var: 'Vector AutoRegression (VAR)', xgb: 'XGBoost/LightGBM gradient boosting',
-    svr: 'Support Vector Regression', elastic: 'ElasticNet/Ridge/Lasso regression',
-    lstm: 'LSTM/GRU recurrent neural networks', tcn: 'Temporal Convolutional Network',
-    transformer: 'Transformer/TFT attention models', nbeats: 'N-BEATS/N-HiTS neural forecasting',
-    arima_lstm: 'ARIMA+LSTM hybrid model', stacking: 'Model stacking / ensemble methods',
-    prophet_ml: 'Prophet + ML decomposition', gp: 'Gaussian Process regression',
-    bsts: 'Bayesian Structural Time Series', deepar: 'DeepAR probabilistic forecasting',
-    ppo_dqn: 'Reinforcement Learning (PPO/DQN)', marl: 'Multi-Agent RL simulation',
-  };
-  const modelDesc = modelLabels[modelId] || modelId;
-
-  const prompt = `You are a content validator for EternalQuants, a quantitative finance education platform.
-
-A user wants to upload a Jupyter notebook to the "${modelDesc}" section.
-
-Review the notebook and answer TWO questions:
-1. RELEVANCE: Is this notebook related to "${modelDesc}" in a finance, data science, or quantitative analysis context? Be lenient — general Python finance/ML work qualifies.
-2. SAFETY: Does this notebook contain harmful code? (os.system file deletion, network attacks, crypto mining, malware, completely non-educational content)
-
-Notebook excerpt (first 25 cells):
-${codeSnippet}
-
-Respond ONLY with this exact JSON (no extra text):
-{
-  "relevant": true,
-  "safe": true,
-  "relevance_reason": "1-2 sentence explanation",
-  "safety_reason": "1-2 sentence explanation"
-}`;
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': CLAUDE_API_KEY,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5',
-      max_tokens: 500,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+  const { data, error } = await supabase.functions.invoke('validate-notebook', {
+    body: { notebookContent: codeSnippet, modelId },
   });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error('Claude API: ' + errText.slice(0, 120));
-  }
-
-  const data = await response.json();
-  const content = data.content?.[0]?.text || '';
-  const match = content.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('Unexpected validation response');
-  return JSON.parse(match[0]);
+  if (error) throw new Error('Validation service: ' + error.message);
+  if (data?.error) throw new Error('Validation service: ' + data.error);
+  return data;
 }
 
 /* ─── MODEL DATA (unchanged from HTML) ─── */
